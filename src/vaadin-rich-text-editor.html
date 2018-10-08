@@ -76,6 +76,7 @@ This program is available under Apache License Version 2.0, available at https:/
 
   <script>
     (function() {
+      'use strict';
 
       const Quill = window.Quill;
 
@@ -121,6 +122,24 @@ This program is available under Apache License Version 2.0, available at https:/
               notify: true
             }
           };
+        }
+
+        get htmlValue() {
+          const className = 'ql-editor';
+          const editor = this.shadowRoot.querySelector(`.${className}`);
+          let content = editor.innerHTML;
+
+          // Remove style-scoped classes that are appended when ShadyDOM is enabled
+          Array.from(editor.classList).forEach(c => content = content.replace(new RegExp('\\s*' + c, 'g'), ''));
+
+          // Replace Quill classes with inline styles
+          ['right', 'center', 'justify'].forEach(align => {
+            content = content.replace(new RegExp(` class=[\\\\]?"\\s?ql-align-${align}[\\\\]?"`, 'g'), ` style="text-align: ${align}"`);
+          });
+
+          content = content.replace(/ class=""/g, '');
+
+          return content;
         }
 
         ready() {
