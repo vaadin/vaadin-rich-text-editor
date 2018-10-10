@@ -16,6 +16,12 @@
     </template>
   </test-fixture>
 
+  <test-fixture id="with-value">
+    <template>
+      <vaadin-rich-text-editor value='[{"insert": "Go Vaadin"}]'></vaadin-rich-text-editor>
+    </template>
+  </test-fixture>
+
   <script>
     describe('rich text editor', () => {
       'use strict';
@@ -164,6 +170,12 @@
           editor.insertText(0, 'Foo', 'user');
           rte.value = [];
           expect(editor.getText()).to.equal('\n');
+        });
+
+        it('should correctly parse value from attribute', () => {
+          rte = fixture('with-value');
+          editor = rte._editor;
+          expect(editor.getText()).to.equal('Go Vaadin\n');
         });
       });
 
