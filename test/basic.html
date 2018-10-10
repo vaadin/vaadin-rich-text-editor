@@ -272,6 +272,59 @@
           expect(el.style.textAlign).to.equal('center');
         });
       });
+
+      describe('disabled', () => {
+        it('should be set to false by default', () => {
+          expect(rte.disabled).to.be.false;
+        });
+
+        it('should reflect to attribute', () => {
+          rte.disabled = true;
+          expect(rte.hasAttribute('disabled')).to.be.true;
+        });
+
+        it('should invoke the editor methods', () => {
+          const spy = sinon.spy(editor, 'enable');
+          rte.disabled = true;
+          expect(spy).to.be.calledOnce;
+          expect(spy.firstCall.args[0]).to.equal(false);
+          rte.disabled = false;
+          expect(spy).to.be.calledTwice;
+          expect(spy.secondCall.args).to.have.length(0);
+        });
+
+        it('should disallow interactions with the editor', () => {
+          rte.disabled = true;
+          expect(getComputedStyle(rte).pointerEvents).to.equal('none');
+        });
+      });
+
+      describe('readonly', () => {
+        it('should be set to false by default', () => {
+          expect(rte.readonly).to.be.false;
+        });
+
+        it('should reflect to attribute', () => {
+          rte.readonly = true;
+          expect(rte.hasAttribute('readonly')).to.be.true;
+        });
+
+        it('should invoke the editor methods', () => {
+          const spy = sinon.spy(editor, 'enable');
+          rte.readonly = true;
+          expect(spy).to.be.calledOnce;
+          expect(spy.firstCall.args[0]).to.equal(false);
+          rte.readonly = false;
+          expect(spy).to.be.calledTwice;
+          expect(spy.secondCall.args).to.have.length(0);
+        });
+
+        it('should disallow interactions with the toolbar', () => {
+          rte.readonly = true;
+          expect(getComputedStyle(rte.shadowRoot.querySelector('[part="toolbar"]')).pointerEvents).to.equal('none');
+          expect(getComputedStyle(rte).pointerEvents).to.not.equal('none');
+        });
+      });
     });
   </script>
 </body>

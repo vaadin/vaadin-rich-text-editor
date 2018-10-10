@@ -1,0 +1,29 @@
+<link rel="import" href="vaadin-rich-text-editor-content-styles.html">
+<link rel="import" href="vaadin-rich-text-editor-toolbar-styles.html">
+
+<dom-module id="vaadin-rich-text-editor-styles">
+  <template>
+    <style include="vaadin-rich-text-editor-content-styles vaadin-rich-text-editor-toolbar-styles">
+      :host([disabled]) [part="toolbar"] {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      :host([disabled]),
+      :host([readonly]) [part="toolbar"] {
+        pointer-events: none;
+      }
+
+      :host([disabled]) [part="toolbar"],
+      :host([disabled]) [part="content"] {
+        opacity: 0.5;
+      }
+
+      :host([disabled]) [part$="button"],
+      :host([readonly]) [part$="button"] {
+        background-color: transparent;
+      }
+    </style>
+  </template>
+</dom-module>

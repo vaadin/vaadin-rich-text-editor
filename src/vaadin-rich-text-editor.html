@@ -10,12 +10,12 @@ This program is available under Apache License Version 2.0, available at https:/
 <link rel="import" href="../../vaadin-license-checker/vaadin-license-checker.html">
 
 <link rel="import" href="../vendor/vaadin-quill.html">
-<link rel="import" href="vaadin-rich-text-editor-content-styles.html">
+<link rel="import" href="vaadin-rich-text-editor-styles.html">
 <link rel="import" href="vaadin-rich-text-editor-toolbar-styles.html">
 
 <dom-module id="vaadin-rich-text-editor">
   <template>
-    <style include="vaadin-rich-text-editor-content-styles vaadin-rich-text-editor-toolbar-styles">
+    <style include="vaadin-rich-text-editor-styles">
       :host {
         display: block;
       }
@@ -147,10 +147,38 @@ This program is available under Apache License Version 2.0, available at https:/
              */
             value: {
               type: Array,
-              observer: '_valueChanged',
               notify: true
+            },
+
+            /**
+             * When true, the user can not modify, nor copy the editor content.
+             */
+            disabled: {
+              type: Boolean,
+              value: false,
+              reflectToAttribute: true
+            },
+
+            /**
+             * When true, the user can not modify the editor content, but can copy it.
+             */
+            readonly: {
+              type: Boolean,
+              value: false,
+              reflectToAttribute: true
+            },
+
+            _editor: {
+              type: Object
             }
           };
+        }
+
+        static get observers() {
+          return [
+            '_valueChanged(value, _editor)',
+            '_disabledChanged(disabled, readonly, _editor)'
+          ];
         }
 
         /**
@@ -202,7 +230,22 @@ This program is available under Apache License Version 2.0, available at https:/
           this._editor.deleteText(0, this._editor.getLength(), 'silent');
         }
 
-        _valueChanged(value) {
+        _disabledChanged(disabled, readonly, editor) {
+          if (disabled === undefined || readonly === undefined || editor === undefined) {
+            return;
+          }
+
+          if (disabled || readonly) {
+            editor.enable(false);
+          } else {
+            editor.enable();
+          }
+        }
+
+        _valueChanged(value, editor) {
+          if (editor === undefined) {
+            return;
+          }
           // prevent editor contents from being reset by user input
           if (this.__userInput) {
             return;
@@ -215,7 +258,7 @@ This program is available under Apache License Version 2.0, available at https:/
           }
           const delta = new Quill.imports.delta(value);
           // suppress text-change event to prevent infinite loop
-          this._editor.setContents(delta, 'silent');
+          editor.setContents(delta, 'silent');
         }
       }
 
