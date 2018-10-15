@@ -131,6 +131,20 @@
         });
       });
 
+      describe('change event', () => {
+        it('should dispatch change event on rte\'s selection-change event', () => {
+          const spy = sinon.spy();
+          rte.addEventListener('change', spy);
+
+          // Emulate setting the value from keyboard
+          rte._editor.setContents(new window.Quill.imports.delta([{insert: 'Foo'}]), 'user');
+          flushValueDebouncer();
+          rte._editor.emitter.emit('selection-change');
+
+          expect(spy.calledOnce).to.be.true;
+        });
+      });
+
       describe('value', () => {
         it('by default should be stringified empty "delta" of the editor', done => {
           expect(rte.value).to.be.string;
