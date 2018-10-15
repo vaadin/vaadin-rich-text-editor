@@ -167,6 +167,9 @@ This program is available under Apache License Version 2.0, available at https:/
               value: DEFAULT_VALUE
             },
 
+            /**
+             * HTML representation of the rich text editor content.
+             */
             htmlValue: {
               type: String,
               notify: true,
@@ -238,10 +241,6 @@ This program is available under Apache License Version 2.0, available at https:/
           ];
         }
 
-        /**
-         * HTML representation of the rich text editor content.
-         * @type {string}
-         */
         __updateHtmlValue() {
           const className = 'ql-editor';
           const editor = this.shadowRoot.querySelector(`.${className}`);
