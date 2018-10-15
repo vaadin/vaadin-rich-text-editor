@@ -7,6 +7,7 @@ This program is available under Apache License Version 2.0, available at https:/
 <link rel="import" href="../../polymer/polymer-element.html">
 <link rel="import" href="../../polymer/lib/utils/async.html">
 <link rel="import" href="../../polymer/lib/utils/debounce.html">
+<link rel="import" href="../../polymer/lib/utils/gestures.html">
 <link rel="import" href="../../vaadin-themable-mixin/vaadin-themable-mixin.html">
 <link rel="import" href="../../vaadin-element-mixin/vaadin-element-mixin.html">
 <link rel="import" href="../../vaadin-license-checker/vaadin-license-checker.html">
@@ -75,7 +76,7 @@ This program is available under Apache License Version 2.0, available at https:/
       <button type="button" class="ql-align" value="justify" part="align-justify-button" aria-label$="[[i18n.alignJustify]]"></button>
 
       <!-- Blockquote -->
-      <button type="button" class="ql-image" part="image-button" aria-label$="[[i18n.image]]"></button>
+      <button type="button" part="image-button" aria-label$="[[i18n.image]]" on-touchend="_onImageTouchEnd" on-click="_onImageClick"></button>
 
       <!-- Blockquote -->
       <button type="button" class="ql-blockquote" part="blockquote-button" aria-label$="[[i18n.blockquote]]"></button>
@@ -86,7 +87,7 @@ This program is available under Apache License Version 2.0, available at https:/
       <!-- Clean -->
       <button type="button" class="ql-clean" part="clean-button" aria-label$="[[i18n.clean]]"></button>
 
-      <input type="file" accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon" on-change="_uploadImage">
+      <input id="fileInput" type="file" accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon" on-change="_uploadImage">
     </div>
 
     <div part="content"></div>
@@ -291,17 +292,11 @@ This program is available under Apache License Version 2.0, available at https:/
 
           const editor = this.shadowRoot.querySelector('[part="content"]');
           const toolbar = this.shadowRoot.querySelector('[part="toolbar"]');
-          const upload = toolbar.querySelector('input[type=file]');
 
           this._editor = new Quill(editor, {
             modules: {
               toolbar: {
-                container: toolbar,
-                handlers: {
-                  image() {
-                    upload.click();
-                  }
-                }
+                container: toolbar
               }
             },
             placeholder: 'Type something...'
@@ -342,6 +337,25 @@ This program is available under Apache License Version 2.0, available at https:/
           } else {
             buttons.forEach(btn => btn.removeAttribute('disabled'));
           }
+        }
+
+        _onImageTouchEnd(e) {
+          // Cancel the event to avoid the following click event
+          e.preventDefault();
+          // FIXME(platosha): workaround for Polymer Gestures mouseCanceller
+          // cancelling the following synthetic click. See also:
+          // https://github.com/Polymer/polymer/issues/5289
+          this.__resetMouseCanceller();
+          this._onImageClick();
+        }
+
+        __resetMouseCanceller() {
+          Polymer.Gestures.resetMouseCanceller();
+        }
+
+        _onImageClick() {
+          this.$.fileInput.value = '';
+          this.$.fileInput.click();
         }
 
         _uploadImage(e) {
