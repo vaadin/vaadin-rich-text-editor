@@ -325,12 +325,19 @@ This program is available under Apache License Version 2.0, available at https:/
 
           this.addEventListener('focusout', () => this.__wasBlurred = false);
 
-          this._editor.on('selection-change', this.__announceFormatting.bind(this));
+          this._editor.on('selection-change', () => {
+            this.__updateButtonsStates();
+            this.__announceFormatting();
+          });
 
           const buttons = this._toolbarButtons;
 
           // Disable tabbing to all buttons but the first one
-          buttons.forEach((button, index) => index > 0 && button.setAttribute('tabindex', '-1'));
+          // And set event listener for click
+          buttons.forEach((button, index) => {
+            button.addEventListener('click', this.__updateButtonsStates.bind(this));
+            index > 0 && button.setAttribute('tabindex', '-1');
+          });
 
           toolbar.addEventListener('keydown', e => {
             // Use roving tab-index for the toolbar buttons
@@ -385,6 +392,21 @@ This program is available under Apache License Version 2.0, available at https:/
           content = content.replace(/ class=""/g, '');
 
           this._setHtmlValue(content);
+        }
+
+        __updateButtonsStates() {
+          Array.from(this.shadowRoot.querySelectorAll('[part$="button"]')).forEach(btn =>
+            this.__toggleAttribute('on', btn.classList.contains('ql-active'), btn));
+        }
+
+        __toggleAttribute(name, bool, node) {
+          if (node.hasAttribute(name) === !bool) {
+            if (bool) {
+              node.setAttribute(name, '');
+            } else {
+              node.removeAttribute(name);
+            }
+          }
         }
 
         __announceFormatting() {
