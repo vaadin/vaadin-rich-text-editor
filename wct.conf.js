@@ -62,7 +62,7 @@ module.exports = {
       'iOS Simulator/ipad@11.3',
       'iOS Simulator/iphone@10.3',
       'Windows 10/chrome@latest',
-      'Windows 10/firefox@latest'
+      'Windows 10/firefox@62.0'
     ];
 
     if (env === 'saucelabs') {
