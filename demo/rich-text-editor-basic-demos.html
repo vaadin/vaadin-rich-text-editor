@@ -20,6 +20,28 @@
       </template>
     </vaadin-demo-snippet>
 
+    <h3>Default Content with Delta</h3>
+    <p>
+      Rich Text Editor internally uses <b>Delta</b> library for parsing value.
+      Follow the API guildlines provided on <a href="https://github.com/quilljs/delta">GitHub</a> to generate value and set <b>stringified</b> version of it to the <code>&lt;vaadin-rich-text-editor&gt;</code>.
+    </p>
+    <p>
+      <b>NOTE:</b> You must explicitly import the <code>Delta</code> library version <a href="https://www.npmjs.com/package/quill-delta/v/4.0.1">4.0.1</a> in order to use it with the <code>&lt;vaadin-rich-text-editor&gt;</code>.
+    </p>
+    <vaadin-demo-snippet id="rich-text-editor-basic-demos-default-content">
+      <template preserve-content>
+        <vaadin-rich-text-editor></vaadin-rich-text-editor>
+        <script>
+          window.addDemoReadyListener('#rich-text-editor-basic-demos-default-content', function(document) {
+            const value = new Delta().insert('Fight for ').insert('simplicity!', {bold: true});
+            const rte = document.querySelector('vaadin-rich-text-editor');
+
+            rte.value = JSON.stringify(value.ops);
+          });
+        </script>
+      </template>
+    </vaadin-demo-snippet>
+
   </template>
   <script>
     class RichTextEditorBasicDemos extends DemoReadyEventEmitter(RichTextEditorDemo(Polymer.Element)) {

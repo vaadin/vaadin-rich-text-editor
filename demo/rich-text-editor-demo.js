@@ -52,6 +52,7 @@ window.RichTextEditorDemo = superClass => {
           }
         }, 0);
       });
+      window.Delta = window.Quill.imports.delta;
     }
   };
 };
