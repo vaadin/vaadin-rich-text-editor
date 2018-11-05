@@ -16,10 +16,6 @@
 <dom-module id="lumo-rich-text-editor-theme">
   <template>
     <style>
-      :host {
-        height: calc(var(--lumo-size-m) * 8);
-      }
-
       [part="toolbar"] {
         background-color: var(--lumo-contrast-5pct);
         padding: calc(var(--lumo-space-s) - 1px) var(--lumo-space-xs);
@@ -164,7 +160,7 @@
 
       [part="content"] {
         background-color: var(--lumo-base-color);
-        flex-basis: auto;
+        flex: auto;
       }
 
       /* TODO unsupported selector */
