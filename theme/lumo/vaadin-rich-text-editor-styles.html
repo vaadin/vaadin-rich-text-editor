@@ -19,6 +19,10 @@
 <dom-module id="lumo-rich-text-editor-theme">
   <template>
     <style>
+      :host {
+        min-height: calc(var(--lumo-size-m) * 8);
+      }
+
       [part="toolbar"] {
         background-color: var(--lumo-contrast-5pct);
         padding: calc(var(--lumo-space-s) - 1px) var(--lumo-space-xs);
