@@ -53,7 +53,7 @@
       });
 
       describe('toolbar controls', () => {
-        let btn;
+        let btn, spy;
 
         ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'].forEach(fmt => {
           it(`should apply ${fmt} formatting when clicking the "toolbar-button-${fmt}" part`, () => {
@@ -68,6 +68,13 @@
             editor.format(fmt, true);
             btn.click();
             expect(editor.getFormat(0)).to.be.empty.object;
+          });
+
+          it(`should blur the "toolbar-button-${fmt}" part after it is clicked`, () => {
+            btn = getButton(fmt);
+            spy = sinon.spy(btn, 'blur');
+            btn.dispatchEvent(new CustomEvent('click', {cancelable: true}));
+            expect(spy).to.be.calledOnce;
           });
         });
 
@@ -85,6 +92,13 @@
             btn.click();
             expect(editor.getFormat(0)).to.be.empty.object;
           });
+
+          it(`should blur the "toolbar-button-${scr}script" part after it is clicked`, () => {
+            btn = getButton(`${scr}script`);
+            spy = sinon.spy(btn, 'blur');
+            btn.dispatchEvent(new CustomEvent('click', {cancelable: true}));
+            expect(spy).to.be.calledOnce;
+          });
         });
 
         ['ordered', 'bullet'].forEach(type => {
@@ -97,6 +111,13 @@
             btn.click();
             expect(editor.getFormat(0).list).to.be.empty;
           });
+
+          it(`should blur the "toolbar-button-list-${type}" part after it is clicked`, () => {
+            btn = getButton(`list-${type}`);
+            spy = sinon.spy(btn, 'blur');
+            btn.dispatchEvent(new CustomEvent('click', {cancelable: true}));
+            expect(spy).to.be.calledOnce;
+          });
         });
 
         [1, 2].forEach(level => {
@@ -108,6 +129,13 @@
 
             btn.click();
             expect(editor.getFormat(0).header).to.be.empty;
+          });
+
+          it(`should blur the "toolbar-button-h${level}" part after it is clicked`, () => {
+            btn = getButton(`h${level}`);
+            spy = sinon.spy(btn, 'blur');
+            btn.dispatchEvent(new CustomEvent('click', {cancelable: true}));
+            expect(spy).to.be.calledOnce;
           });
         });
 
@@ -122,6 +150,13 @@
             btn.click();
             expect(editor.getFormat(0).align).to.be.empty;
           });
+
+          it(`should blur the "toolbar-button-align-${align}" part after it is clicked`, () => {
+            btn = getButton(`align-${align}`);
+            spy = sinon.spy(btn, 'blur');
+            btn.dispatchEvent(new CustomEvent('click', {cancelable: true}));
+            expect(spy).to.be.calledOnce;
+          });
         });
 
         it('should clear formatting when clicking the "clean-button" part', () => {
@@ -131,6 +166,13 @@
           btn = getButton('clean');
           btn.click();
           expect(editor.getFormat(0)).to.be.empty.object;
+        });
+
+        it(`should blur the "clear-button" part after it is clicked`, () => {
+          btn = getButton('clean');
+          spy = sinon.spy(btn, 'blur');
+          btn.dispatchEvent(new CustomEvent('click', {cancelable: true}));
+          expect(spy).to.be.calledOnce;
         });
 
         describe('on state attribute', () => {

@@ -184,19 +184,6 @@ This program is available under Apache License Version 2.0, available at https:/
 
       const Quill = window.Quill;
 
-      const HANDLERS = [
-        'bold',
-        'italic',
-        'underline',
-        'strike',
-        'header',
-        'script',
-        'list',
-        'align',
-        'blockquote',
-        'code-block'
-      ];
-
       const SOURCE = {
         USER: 'user',
         SILENT: 'silent'
@@ -413,14 +400,14 @@ This program is available under Apache License Version 2.0, available at https:/
           super.ready();
 
           const editor = this.shadowRoot.querySelector('[part="content"]');
-          const toolbarConfig = this._prepareToolbar();
-          this._toolbar = toolbarConfig.container;
+          const toolbar = this.shadowRoot.querySelector('[part="toolbar"]');
+          this._toolbar = toolbar;
 
           this._addToolbarListeners();
 
           this._editor = new Quill(editor, {
             modules: {
-              toolbar: toolbarConfig
+              toolbar: toolbar
             }
           });
 
@@ -465,30 +452,6 @@ This program is available under Apache License Version 2.0, available at https:/
           this._editor.on('selection-change', this.__announceFormatting.bind(this));
         }
 
-        _prepareToolbar() {
-          const clean = Quill.imports['modules/toolbar'].DEFAULTS.handlers.clean;
-          const self = this;
-
-          const toolbar = {
-            container: this.shadowRoot.querySelector('[part="toolbar"]'),
-            handlers: {
-              clean: function() {
-                self._markToolbarClicked();
-                clean.call(this);
-              }
-            }
-          };
-
-          HANDLERS.forEach(handler => {
-            toolbar.handlers[handler] = value => {
-              this._markToolbarClicked();
-              this._editor.format(handler, value, SOURCE.USER);
-            };
-          });
-
-          return toolbar;
-        }
-
         _addToolbarListeners() {
           const buttons = this._toolbarButtons;
           const toolbar = this._toolbar;
@@ -496,25 +459,34 @@ This program is available under Apache License Version 2.0, available at https:/
           // Disable tabbing to all buttons but the first one
           buttons.forEach((button, index) => index > 0 && button.setAttribute('tabindex', '-1'));
 
-          toolbar.addEventListener('keydown', e => {
-            // Use roving tab-index for the toolbar buttons
-            let index = buttons.indexOf(e.target);
-            buttons[index].setAttribute('tabindex', '-1');
-            if (e.keyCode === 39 && ++index === buttons.length) {
-              index = 0;
-            } else if (e.keyCode === 37 && --index === -1) {
-              index = buttons.length - 1;
-            }
-            buttons[index].removeAttribute('tabindex');
-            buttons[index].focus();
-
-            // Esc focuses the content
-            if (e.keyCode === 27 || e.keyCode === TAB_KEY) {
-              e.preventDefault();
+          buttons.forEach(btn => {
+            btn.addEventListener('click', e => {
+              this._markToolbarClicked();
               // Firefox 63 needs blur to return caret back to the editor:
               // https://github.com/vaadin/vaadin-rich-text-editor/issues/90
               e.target.blur();
+            });
+          });
+
+          toolbar.addEventListener('keydown', e => {
+            // Esc and Tab should focus the content
+            if (e.keyCode === 27 || (e.keyCode === TAB_KEY && !e.shiftKey)) {
+              e.preventDefault();
+              e.target.blur();
               this._editor.focus();
+            }
+
+            // Use roving tab-index for the toolbar buttons
+            if ([37, 39].indexOf(e.keyCode) > -1) {
+              let index = buttons.indexOf(e.target);
+              buttons[index].setAttribute('tabindex', '-1');
+              if (e.keyCode === 39 && ++index === buttons.length) {
+                index = 0;
+              } else if (e.keyCode === 37 && --index === -1) {
+                index = buttons.length - 1;
+              }
+              buttons[index].removeAttribute('tabindex');
+              buttons[index].focus();
             }
           });
 
