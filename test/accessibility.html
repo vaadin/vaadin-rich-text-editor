@@ -152,6 +152,22 @@
           buttons[0].dispatchEvent(e);
         });
 
+        it('should blur the toolbar button on esc', done => {
+          const btn = buttons[0];
+          sinon.stub(btn, 'blur', done);
+          const e = new CustomEvent('keydown', {bubbles: true});
+          e.keyCode = 27;
+          btn.dispatchEvent(e);
+        });
+
+        it('should blur the toolbar button on tab', done => {
+          const btn = buttons[0];
+          sinon.stub(btn, 'blur', done);
+          const e = new CustomEvent('keydown', {bubbles: true});
+          e.keyCode = 9;
+          btn.dispatchEvent(e);
+        });
+
         it('should blur the content on shift-tab in the list item', () => {
           const spy = sinon.spy(content, 'blur');
           rte.value = '[{"attributes":{"list":"bullet"},"insert":"\\n"}]';

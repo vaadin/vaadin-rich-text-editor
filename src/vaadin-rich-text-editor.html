@@ -509,7 +509,13 @@ This program is available under Apache License Version 2.0, available at https:/
             buttons[index].focus();
 
             // Esc focuses the content
-            e.keyCode === 27 && this._editor.focus();
+            if (e.keyCode === 27 || e.keyCode === TAB_KEY) {
+              e.preventDefault();
+              // Firefox 63 needs blur to return caret back to the editor:
+              // https://github.com/vaadin/vaadin-rich-text-editor/issues/90
+              e.target.blur();
+              this._editor.focus();
+            }
           });
 
           // mousedown happens before editor focusout
