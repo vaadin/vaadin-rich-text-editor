@@ -52,7 +52,7 @@ window.RichTextEditorDemo = superClass => {
           } else {
             rte.value = `[{"insert":"Write your content here…"}]`;
           }
-        }, 0);
+        }, 300);
       });
     }
   };

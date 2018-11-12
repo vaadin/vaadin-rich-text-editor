@@ -48,6 +48,14 @@ This program is available under Apache License Version 2.0, available at https:/
         min-height: inherit;
         max-height: inherit;
         overflow: hidden;
+        flex: auto;
+      }
+
+      /* FIXME (Yuriy): workaround for auto-grow feature in flex layout for IE11 */
+      @media all and (-ms-high-contrast: none) {
+        .ql-editor {
+          flex: auto;
+        }
       }
     </style>
 
