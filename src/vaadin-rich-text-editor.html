@@ -459,14 +459,19 @@ This program is available under Apache License Version 2.0, available at https:/
           // Disable tabbing to all buttons but the first one
           buttons.forEach((button, index) => index > 0 && button.setAttribute('tabindex', '-1'));
 
-          buttons.forEach(btn => {
-            btn.addEventListener('click', e => {
-              this._markToolbarClicked();
-              // Firefox 63 needs blur to return caret back to the editor:
-              // https://github.com/vaadin/vaadin-rich-text-editor/issues/90
-              e.target.blur();
+          buttons
+            .filter(btn => {
+              const part = btn.getAttribute('part');
+              return /(undo|redo)$/.test(part) === false;
+            })
+            .forEach(btn => {
+              btn.addEventListener('click', e => {
+                this._markToolbarClicked();
+                // Firefox 63 needs blur to return caret back to the editor:
+                // https://github.com/vaadin/vaadin-rich-text-editor/issues/90
+                e.target.blur();
+              });
             });
-          });
 
           toolbar.addEventListener('keydown', e => {
             // Esc and Tab should focus the content
@@ -697,12 +702,14 @@ This program is available under Apache License Version 2.0, available at https:/
 
         _undo(e) {
           e.preventDefault();
+          e.target.blur();
           this._editor.history.undo();
           this._editor.focus();
         }
 
         _redo(e) {
           e.preventDefault();
+          e.target.blur();
           this._editor.history.redo();
           this._editor.focus();
         }

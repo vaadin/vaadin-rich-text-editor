@@ -874,13 +874,20 @@
       });
 
       describe('undo and redo', () => {
-        let btn;
+        let btn, spy;
 
         it('should undo last change when the "undo" button clicked', () => {
           editor.insertText(0, 'Foo', 'user');
           btn = getButton('undo');
           btn.click();
           expect(editor.getText()).to.not.equal('Foo\n');
+        });
+
+        it('should blur the "undo" button after it is clicked', () => {
+          btn = getButton('undo');
+          spy = sinon.spy(btn, 'blur');
+          btn.dispatchEvent(new CustomEvent('click', {cancelable: true}));
+          expect(spy).to.be.calledOnce;
         });
 
         it('should redo last change when the "redo" button clicked', () => {
@@ -890,6 +897,13 @@
           btn = getButton('redo');
           btn.click();
           expect(editor.getText()).to.equal('Foo\n');
+        });
+
+        it('should blur the "redo" button after it is clicked', () => {
+          btn = getButton('redo');
+          spy = sinon.spy(btn, 'blur');
+          btn.dispatchEvent(new CustomEvent('click', {cancelable: true}));
+          expect(spy).to.be.calledOnce;
         });
       });
 
@@ -901,7 +915,7 @@
           expect(editor.getSelection().length).to.equal(3);
         });
 
-        it('should not throw when insertins newline in the list', () => {
+        it('should not throw when inserting newline in the list', () => {
           rte.value = JSON.stringify([
             {insert: '12'}, {attributes: {list: 'bullet'}, insert: '\n'},
             {insert: '34'}, {attributes: {list: 'bullet'}, insert: '\n'}
