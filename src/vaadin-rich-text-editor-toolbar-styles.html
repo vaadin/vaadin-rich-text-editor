@@ -90,6 +90,18 @@
         font-size: 0.875em;
       }
 
+      [part~="toolbar-button-table"]::before {
+        content: "+T";
+      }
+
+      [part~="toolbar-button-append-row"]::before {
+        content: "+R";
+      }
+
+      [part~="toolbar-button-append-col"]::before {
+        content: "+C";
+      }
+
       [part~="toolbar-button-h1"]::before,
       [part~="toolbar-button-h2"]::before,
       [part~="toolbar-button-h3"]::before {
