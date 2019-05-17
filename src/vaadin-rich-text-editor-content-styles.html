@@ -27,6 +27,38 @@
         padding: 0;
       }
 
+      ol {
+        padding-left: 1.5em;
+      }
+
+      li {
+        list-style-type: none;
+        padding-left: 1.5em;
+        position: relative;
+      }
+
+      li > .ql-ui::before {
+        display: inline-block;
+        margin-left: -1.5em;
+        margin-right: 0.3em;
+        text-align: right;
+        white-space: nowrap;
+        width: 1.2em;
+      }
+
+      li[data-list=bullet] > .ql-ui::before {
+        content: '\2022';
+      }
+
+      li[data-list=ordered] {
+        counter-reset: list-1 list-2 list-3 list-4 list-5 list-6 list-7 list-8 list-9;
+        counter-increment: list-0;
+      }
+
+      li[data-list=ordered] > .ql-ui::before {
+        content: counter(list-0, decimal) '. ';
+      }
+
       .ql-editor {
         box-sizing: border-box;
         line-height: 1.42;
@@ -62,6 +94,21 @@
       .ql-align-right {
         text-align: right;
       }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+
+      td {
+        outline: none;
+      }
+
+      .ql-code-block-container {
+        font-family: monospace;
+      }
+
       /* quill core end */
 
       blockquote {
@@ -71,22 +118,14 @@
         padding-left: 1em;
       }
 
-      code,
-      pre {
-        background-color: #f0f0f0;
-        border-radius: 0.1875em;
-      }
-
-      pre {
-        white-space: pre-wrap;
+      .ql-code-block-container {
         margin-bottom: 0.3125em;
         margin-top: 0.3125em;
-        padding: 0.3125em 0.625em;
-      }
-
-      code {
-        font-size: 85%;
         padding: 0.125em 0.25em;
+        font-size: 85%;
+        white-space: pre-wrap;
+        background-color: #f0f0f0;
+        border-radius: 0.1875em;
       }
 
       img {

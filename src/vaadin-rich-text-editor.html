@@ -637,7 +637,7 @@ This program is available under Apache License Version 2.0, available at https:/
           };
 
           const keyboard = this._editor.getModule('keyboard');
-          const bindings = keyboard.bindings[TAB_KEY];
+          const bindings = keyboard.bindings['Tab'];
 
           // exclude Quill shift-tab bindings, except for code block,
           // as some of those are breaking when on a newline in the list
@@ -645,7 +645,7 @@ This program is available under Apache License Version 2.0, available at https:/
           const originalBindings = bindings.filter(b => !b.shiftKey || b.format && b.format['code-block']);
           const moveFocusBinding = {key: TAB_KEY, shiftKey: true, handler: focusToolbar};
 
-          keyboard.bindings[TAB_KEY] = [...originalBindings, moveFocusBinding];
+          keyboard.bindings['Tab'] = [...originalBindings, moveFocusBinding];
 
           // alt-f10 focuses a toolbar button
           keyboard.addBinding({key: 121, altKey: true, handler: focusToolbar});
