@@ -209,7 +209,13 @@
             expect(spy).to.be.calledOnce;
           });
 
-          it('should insert image from the file dialog on file input change event', done => {
+          const isDesktopSafari = (() => {
+            const uA = navigator.userAgent;
+            const vendor = navigator.vendor;
+            return /Safari/i.test(uA) && /Apple Computer/.test(vendor) && !/Mobi|Android/i.test(uA);
+          })();
+
+          !isDesktopSafari && it('should insert image from the file dialog on file input change event', done => {
             // We can't simply assign `files` property of input[type="file"].
             // Tweaking __proto__ to make it assignable below.
             const fileInput = rte.shadowRoot.querySelector('input[type="file"]');
