@@ -239,7 +239,7 @@
             fileInput.dispatchEvent(new Event('change'));
           });
 
-          it('should mark image button as clicked for subsequent change event', done => {
+          !isDesktopSafari && it('should mark image button as clicked for subsequent change event', done => {
             const markClickedSpy = sinon.spy(rte, '_markToolbarClicked');
 
             const fileInput = rte.shadowRoot.querySelector('input[type="file"]');
