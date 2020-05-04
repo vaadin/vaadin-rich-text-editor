@@ -471,6 +471,8 @@ This program is available under Apache License Version 2.0, available at https:/
             alignGroup.querySelector('[part~="toolbar-button-align-left"]').value = '';
             alignGroup.querySelector('[part~="toolbar-button-align-right"]').value = 'right';
           }
+
+          this._editor.getModule('toolbar').update(this._editor.getSelection());
         }
 
         ready() {
