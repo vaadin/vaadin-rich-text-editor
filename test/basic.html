@@ -862,7 +862,7 @@
         });
 
         it('should update value on API call', () => {
-          rte.readonly = true;         
+          rte.readonly = true;
           rte.dangerouslySetHtmlValue('<h3><i>Foo</i>Bar</h3>');
           flushValueDebouncer();
           const delta = '[{"attributes":{"italic":true},"insert":"Foo"},{"insert":"Bar"},{"attributes":{"header":3},"insert":"\\n"}]';
