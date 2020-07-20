@@ -109,6 +109,13 @@ This program is available under Apache License Version 2.0, available at https:/
           <button type="button" class="ql-align" value="right" part="toolbar-button toolbar-button-align-right" title$="[[i18n.alignRight]]"></button>
         </span>
 
+        <span part="toolbar-group toolbar-group-indentation">
+          <!-- indent left -->
+          <button type="button" class="ql-indent" value="-1" part="toolbar-button toolbar-button-indent-left" title$="[[i18n.indentLeft]]"></button>
+          <!-- indent right -->
+          <button type="button" class="ql-indent" value="+1" part="toolbar-button toolbar-button-indent-right" title$="[[i18n.indentRight]]"></button>
+        </span>
+
         <span part="toolbar-group toolbar-group-rich-text">
           <!-- Image -->
           <button type="button" part="toolbar-button toolbar-button-image" title$="[[i18n.image]]" on-touchend="_onImageTouchEnd" on-click="_onImageClick"></button>
@@ -192,6 +199,7 @@ This program is available under Apache License Version 2.0, available at https:/
         'script',
         'list',
         'align',
+        'indent',
         'blockquote',
         'code-block'
       ];
@@ -266,6 +274,8 @@ This program is available under Apache License Version 2.0, available at https:/
        * `toolbar-button-align-left`          | The "left align" button
        * `toolbar-button-align-center`        | The "center align" button
        * `toolbar-button-align-right`         | The "right align" button
+       * `toolbar-button-indent-left`         | The "indent left" button
+       * `toolbar-button-indent-right`        | The "indent right" button
        * `toolbar-button-image`               | The "image" button
        * `toolbar-button-link`                | The "link" button
        * `toolbar-button-blockquote`          | The "blockquote" button
@@ -367,6 +377,8 @@ This program is available under Apache License Version 2.0, available at https:/
                   alignLeft: 'align left',
                   alignCenter: 'align center',
                   alignRight: 'align right',
+                  indentRight: 'indent right',
+                  indentLeft: 'indent left',
                   image: 'image',
                   link: 'link',
                   blockquote: 'blockquote',
@@ -568,8 +580,20 @@ This program is available under Apache License Version 2.0, available at https:/
 
           HANDLERS.forEach(handler => {
             toolbar.handlers[handler] = value => {
-              this._markToolbarClicked();
-              this._editor.format(handler, value, SOURCE.USER);
+              if (handler === 'indent') {
+                const formats = this._editor.getFormat(this._editor.getSelection());
+                const indent = parseInt(formats.indent || 0);
+                if (value === '+1' || value === '-1') {
+                  let modifier = value === '+1' ? 1 : -1;
+                  if (formats.direction === 'rtl') {
+                    modifier *= -1;
+                  }
+                  this._editor.format(handler, indent + modifier, SOURCE.USER);
+                }
+              } else {
+                this._markToolbarClicked();
+                this._editor.format(handler, value, SOURCE.USER);
+              }
             };
           });
 
