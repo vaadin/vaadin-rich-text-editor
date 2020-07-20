@@ -69,6 +69,24 @@
             btn.click();
             expect(editor.getFormat(0)).to.be.empty.object;
           });
+
+          it(`should apply ${fmt} to the selected text on "toolbar-button-${fmt}" click`, (done) => {
+            editor.focus();
+            editor.insertText(0, 'Foo', 'user');
+            editor.setSelection(0, 3);
+
+            // timeout needed to reproduce Safari issue
+            setTimeout(() => {
+              btn = getButton(fmt);
+              btn.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+              editor.root.dispatchEvent(new CustomEvent('focusout', {bubbles: true}));
+              document.body.focus();
+              btn.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+              btn.click();
+              expect(editor.getFormat(0, 3)[fmt]).to.be.true;
+              done();
+            }, 1);
+          });
         });
 
         ['sub', 'super'].forEach(scr => {
