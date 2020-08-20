@@ -580,20 +580,8 @@ This program is available under Apache License Version 2.0, available at https:/
 
           HANDLERS.forEach(handler => {
             toolbar.handlers[handler] = value => {
-              if (handler === 'indent') {
-                const formats = this._editor.getFormat(this._editor.getSelection());
-                const indent = parseInt(formats.indent || 0);
-                if (value === '+1' || value === '-1') {
-                  let modifier = value === '+1' ? 1 : -1;
-                  if (formats.direction === 'rtl') {
-                    modifier *= -1;
-                  }
-                  this._editor.format(handler, indent + modifier, SOURCE.USER);
-                }
-              } else {
-                this._markToolbarClicked();
-                this._editor.format(handler, value, SOURCE.USER);
-              }
+              this._markToolbarClicked();
+              this._editor.format(handler, value, SOURCE.USER);
             };
           });
 
@@ -874,15 +862,23 @@ This program is available under Apache License Version 2.0, available at https:/
           // Remove style-scoped classes that are appended when ShadyDOM is enabled
           Array.from(editor.classList).forEach(c => content = content.replace(new RegExp('\\s*' + c, 'g'), ''));
 
-          // Remove Quill classes, e.g. ql-syntax, except for align
-          content = content.replace(/\s*ql-(?!align)[\w\-]*\s*/g, '');
+          // Remove Quill classes, e.g. ql-syntax, except for align and indent
+          content = content.replace(/\s*ql-(?!align|indent)[\w\-]*\s*/g, '');
 
-          // Replace Quill align classes with inline styles
-          [this.__dir === 'rtl' ? 'left' : 'right', 'center', 'justify'].forEach(align => {
-            content = content.replace(new RegExp(` class=[\\\\]?"\\s?ql-align-${align}[\\\\]?"`, 'g'), ` style="text-align: ${align}"`);
-          });
-
-          content = content.replace(/ class=""/g, '');
+          // Replace Quill align and indent classes with inline styles
+          let classMatches;
+          while ((classMatches = / class=".*?"/g.exec(content)) !== null) {
+            let inlineStyle = '';
+            const match = classMatches[0];
+            const indentClass = /\s*ql-indent-([1-9])[\w\-]*\s*/g.exec(match) || '';
+            const alignClass = /\s*ql-align-(left|right|center|justify)[\w\-]*\s*/g.exec(match) || '';
+            if (indentClass || alignClass) {
+              const indentStyle = indentClass && `margin-${this.__dir === 'rtl' ? 'right' : 'left'}: ${parseInt(indentClass[1]) * 3}em;`;
+              const alignStyle = alignClass && `text-align: ${alignClass[1]};`;
+              inlineStyle = ` style="${indentStyle} ${alignStyle}"`;
+            }
+            content = content.replace(match, inlineStyle);
+          }
 
           this._setHtmlValue(content);
         }
