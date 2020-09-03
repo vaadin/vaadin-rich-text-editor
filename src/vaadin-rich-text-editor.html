@@ -561,6 +561,19 @@ This program is available under Apache License Version 2.0, available at https:/
           });
 
           this._editor.on('selection-change', this.__announceFormatting.bind(this));
+
+          this._editor.clipboard.addMatcher('[style]', (node, delta) => {
+            const indent = parseInt(node.style[`padding${this.__dir === 'rtl' ? 'Right' : 'Left'}`]);
+            if (indent) {
+              const value = node.tagName.toLowerCase() === 'li' ? (indent - 1.5) / 3 : indent / 3;
+              delta.ops = delta.ops.map(op => {
+                op.attributes = op.attributes || {};
+                op.attributes.indent = value;
+                return op;
+              });
+            }
+            return delta;
+          });
         }
 
         /** @private */
@@ -867,19 +880,20 @@ This program is available under Apache License Version 2.0, available at https:/
 
           // Replace Quill align and indent classes with inline styles
           let classMatches;
-          while ((classMatches = / class=".*?"/g.exec(content)) !== null) {
+          while ((classMatches = /<([a-z0-9-]+)\s*class="[a-z0-9- ]*?"/g.exec(content)) !== null) {
             let inlineStyle = '';
             const match = classMatches[0];
+            const tagName = classMatches[1].toLowerCase();
             const indentClass = /\s*ql-indent-([1-9])[\w\-]*\s*/g.exec(match) || '';
             const alignClass = /\s*ql-align-(left|right|center|justify)[\w\-]*\s*/g.exec(match) || '';
             if (indentClass || alignClass) {
-              const indentStyle = indentClass && `margin-${this.__dir === 'rtl' ? 'right' : 'left'}: ${parseInt(indentClass[1]) * 3}em;`;
+              const indentValue = tagName === 'li' ? parseInt(indentClass[1] + 1.5) * 3 : parseInt(indentClass[1]) * 3;
+              const indentStyle = indentClass && `padding-${this.__dir === 'rtl' ? 'right' : 'left'}: ${indentValue}rem;`;
               const alignStyle = alignClass && `text-align: ${alignClass[1]};`;
-              inlineStyle = ` style="${indentStyle} ${alignStyle}"`;
+              inlineStyle = `<${tagName} style="${indentStyle} ${alignStyle}"`;
             }
             content = content.replace(match, inlineStyle);
           }
-
           this._setHtmlValue(content);
         }
 
