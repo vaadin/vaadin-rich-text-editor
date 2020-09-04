@@ -377,8 +377,8 @@ This program is available under Apache License Version 2.0, available at https:/
                   alignLeft: 'align left',
                   alignCenter: 'align center',
                   alignRight: 'align right',
-                  indentRight: 'indent right',
                   indentLeft: 'indent left',
+                  indentRight: 'indent right',
                   image: 'image',
                   link: 'link',
                   blockquote: 'blockquote',
@@ -489,13 +489,18 @@ This program is available under Apache License Version 2.0, available at https:/
           Quill.register(alignAttributor, true);
 
           const alignGroup = this._toolbar.querySelector('[part~="toolbar-group-alignment"]');
+          const indentGroup = this._toolbar.querySelector('[part~="toolbar-group-indentation"]');
 
           if (dir === 'rtl') {
             alignGroup.querySelector('[part~="toolbar-button-align-left"]').value = 'left';
             alignGroup.querySelector('[part~="toolbar-button-align-right"]').value = '';
+            indentGroup.querySelector('[part~="toolbar-button-indent-left"]').value = '+1';
+            indentGroup.querySelector('[part~="toolbar-button-indent-right"]').value = '-1';
           } else {
             alignGroup.querySelector('[part~="toolbar-button-align-left"]').value = '';
             alignGroup.querySelector('[part~="toolbar-button-align-right"]').value = 'right';
+            indentGroup.querySelector('[part~="toolbar-button-indent-left"]').value = '-1';
+            indentGroup.querySelector('[part~="toolbar-button-indent-right"]').value = '+1';
           }
 
           this._editor.getModule('toolbar').update(this._editor.getSelection());
@@ -872,7 +877,7 @@ This program is available under Apache License Version 2.0, available at https:/
           let content = editor.innerHTML;
 
           // Convert quill indent styles to nested lists
-          // -> https://github.com/quilljs/quill/issues/979
+          // https://github.com/quilljs/quill/issues/979
           content = this._convertLists(content);
 
           // Remove style-scoped classes that are appended when ShadyDOM is enabled
@@ -889,7 +894,7 @@ This program is available under Apache License Version 2.0, available at https:/
             const indentClass = /\s*ql-indent-([1-9])[\w\-]*\s*/g.exec(match) || '';
             const alignClass = /\s*ql-align-(left|right|center|justify)[\w\-]*\s*/g.exec(match) || '';
             if (indentClass || alignClass) {
-              const indentStyle = indentClass && `margin-${this.__dir === 'rtl' ? 'right' : 'left'}: ${parseInt(indentClass[1]) * 3}em;`;
+              const indentStyle = indentClass && `margin-${this.__dir === 'rtl' ? 'right' : 'left'}: ${parseInt(indentClass[1]) * 3}rem;`;
               const alignStyle = alignClass && `text-align: ${alignClass[1]};`;
               inlineStyle = ` style="${indentStyle} ${alignStyle}"`;
             }

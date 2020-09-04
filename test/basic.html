@@ -145,6 +145,17 @@
           });
         });
 
+
+        it(`should apply right indentation when clicking the "toolbar-button-indent-right" part`, () => {
+          btn = getButton(`indent-right`);
+          btn.click();
+          expect(editor.getFormat(0).indent).to.be.equal(1);
+
+          btn = getButton(`indent-left`);
+          btn.click();
+          expect(editor.getFormat(0).align).to.be.empty;
+        });
+
         describe('RTL', () => {
           beforeEach(() => rte.setAttribute('dir', 'rtl'));
 
@@ -161,6 +172,16 @@
               btn.click();
               expect(editor.getFormat(0).align).to.be.empty;
             });
+          });
+
+          it(`should apply left indentation when clicking the "toolbar-button-indent-left" part`, () => {
+            btn = getButton(`indent-left`);
+            btn.click();
+            expect(editor.getFormat(0).indent).to.be.equal(1);
+
+            btn = getButton(`indent-right`);
+            btn.click();
+            expect(editor.getFormat(0).align).to.be.empty;
           });
         });
 
