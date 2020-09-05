@@ -764,6 +764,13 @@
           expect(rte.htmlValue).not.to.be.eql('<h1>Foo</h1>');
         });
 
+        it('should convert quill list indent styles to nested lists', () => {
+          const el = document.createElement('div');
+          el.innerHTML = rte._convertLists('<ul><li class="ql-indent-2"></li></ul>');
+          const ul = el.children[0].children[0];
+          expect(ul.firstChild.tagName).to.equal('UL');
+        });
+
         it('should use <p> tag to wrap inline text', () => {
           rte.value = JSON.stringify([{insert: 'Foo'}]);
           el = getHtml(rte.htmlValue);
@@ -853,6 +860,39 @@
               setValueAndFormatLine('align', align);
               el = getHtml(rte.htmlValue);
               expect(el.style.textAlign).to.equal(align);
+              rte.removeAttribute('dir');
+            });
+          });
+        });
+
+        it('should use inline styles and nested lists for indentation', () => {
+          const indentStyle = {
+            rtl: {'+1': 'marginRight', '-1': 'marginLeft'},
+            ltr: {'+1': 'marginLeft', '-1': 'marginRight'},
+          };
+          ['rtl', 'ltr'].forEach(dir => {
+            ['+1', '-1'].forEach(value => {
+              rte.setAttribute('dir', dir);
+              rte.value = JSON.stringify([{insert: 'Foo\nBar\n'}]);
+              editor.formatLine(0, 0, 'indent', value);
+              editor.formatLine(4, 0, 'list', 'bullet');
+              editor.formatLine(4, 0, 'indent', value);
+              flushValueDebouncer();
+              const prop = indentStyle[dir][value];
+              const el = document.createElement('div');
+              el.innerHTML = rte.htmlValue;
+              const p = el.children[0];
+              const ul = el.children[1];
+              const innerEl = el.children[1].firstChild;
+              if (value === '+1') {
+                expect(p.style[prop]).to.equal('3rem');
+                expect(ul.style[prop]).to.equal('');
+                expect(innerEl.tagName).to.equal('UL');
+              } else {
+                expect(p.style[prop]).to.equal('');
+                expect(ul.style[prop]).to.equal('');
+                expect(innerEl.tagName).to.equal('LI');
+              }
               rte.removeAttribute('dir');
             });
           });
@@ -957,7 +997,7 @@
           expect(editor.getSelection().length).to.equal(3);
         });
 
-        it('should not throw when insertins newline in the list', () => {
+        it('should not throw when inserting newline in the list', () => {
           rte.value = JSON.stringify([
             {insert: '12'}, {attributes: {list: 'bullet'}, insert: '\n'},
             {insert: '34'}, {attributes: {list: 'bullet'}, insert: '\n'}
