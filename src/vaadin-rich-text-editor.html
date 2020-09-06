@@ -568,7 +568,7 @@ This program is available under Apache License Version 2.0, available at https:/
           this._editor.on('selection-change', this.__announceFormatting.bind(this));
 
           this._editor.clipboard.addMatcher('[style]', (node, delta) => {
-            const indent = parseInt(node.style[`padding${this.__dir === 'rtl' ? 'Right' : 'Left'}`]);
+            const indent = parseInt(node.style[`margin${this.__dir === 'rtl' ? 'Right' : 'Left'}`]);
             if (indent) {
               delta.ops = delta.ops.map(op => {
                 op.attributes = op.attributes || {};

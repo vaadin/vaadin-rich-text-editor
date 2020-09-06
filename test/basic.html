@@ -744,6 +744,13 @@
           expect(rte.htmlValue).to.equal('<h3><em>Foo</em>Bar</h3>');
         });
 
+        it('should update value with correct delta when setting htmlValue with indent inline styles', () => {
+          rte.dangerouslySetHtmlValue('<p style="margin-left:3rem">Foo</p>');
+          flushValueDebouncer();
+          const delta = '[{"insert":"Foo"},{"attributes":{"indent":1},"insert":"\\n"}]';
+          expect(rte.value).to.equal(delta);
+        });
+
         it('should return the quill editor innerHTML', () => {
           expect(rte.htmlValue).to.equal('<p><br></p>');
         });
