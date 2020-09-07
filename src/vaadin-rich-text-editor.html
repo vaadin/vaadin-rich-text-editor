@@ -1044,6 +1044,7 @@ This program is available under Apache License Version 2.0, available at https:/
 
         /** @private */
         _convertLists(content) {
+          const textNode = (str) => document.createTextNode(str);
           const tempEl = document.createElement('div');
           tempEl.setAttribute('style', 'display: none;');
           tempEl.innerHTML = content;
@@ -1055,16 +1056,16 @@ This program is available under Apache License Version 2.0, available at https:/
             Array.from(tempEl.querySelectorAll(type)).forEach((outerListEl) => {
               const listChildren = Array.from(outerListEl.children).filter((el) => el.tagName === 'LI');
               const firstLi = listChildren[0];
-              firstLi.before(startTag.repeat(this._getListLevel(firstLi)));
+              outerListEl.insertBefore(textNode(this._repeat(startTag, this._getListLevel(firstLi))), firstLi);
 
               listChildren.forEach((listEl, index) => {
                 const currentLiLevel = this._getListLevel(listEl);
                 if (index < listChildren.length - 1) {
                   const difference = this._getListLevel(listChildren[index + 1]) - currentLiLevel;
                   if (difference > 0) {
-                    listChildren[index + 1].before(startTag.repeat(difference));
+                    outerListEl.insertBefore(textNode(this._repeat(startTag, difference)), listChildren[index + 1]);
                   } else if (difference < 0) {
-                    listEl.after(endTag.repeat(-difference));
+                    outerListEl.insertBefore(textNode(this._repeat(endTag, -difference)), listEl.nextSibling);
                   }
                 }
                 listEl.removeAttribute('class');
@@ -1078,6 +1079,21 @@ This program is available under Apache License Version 2.0, available at https:/
           newContent = newContent.replace(/-start-ol-/g, '<ol>');
           newContent = newContent.replace(/-end-ol-/g, '</ol>');
           return newContent;
+        }
+
+        /** @private */
+        _repeat(str, count) {
+          if (!count) {
+            return '';
+          }
+          const maxCount = str.length * count;
+          count = Math.floor(Math.log(count) / Math.log(2));
+          while (count) {
+            str += str;
+            count--;
+          }
+          str += str.substring(0, maxCount - str.length);
+          return str;
         }
 
         /** @private */
