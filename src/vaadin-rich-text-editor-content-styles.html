@@ -12,7 +12,7 @@
 
       /*
         Quill core styles.
-        CSS selectors removed: margin & padding reset, check list, indentation, video, colors, ordered & unordered list, h1-6, anchor
+        CSS selectors removed: margin & padding reset, check list, video, colors, ordered & unordered list, h1-6, anchor
       */
       .ql-clipboard {
         left: -100000px;
@@ -66,6 +66,201 @@
       .ql-align-right {
         text-align: right;
       }
+
+      /* Indentation */
+
+      .ql-editor ul li.ql-indent-1 {
+        list-style-type: circle;
+      }
+
+      .ql-editor ol li.ql-indent-1 {
+        list-style-type: lower-alpha;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor .ql-indent-1 {
+        margin-left: 3rem;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor li.ql-indent-1 {
+        margin-left: 4.5rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor .ql-indent-1:not(.ql-align-left) {
+        margin-right: 3rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor li.ql-indent-1:not(.ql-align-left) {
+        margin-right: 4.5rem;
+      }
+
+      .ql-editor ul li.ql-indent-2 {
+        list-style-type: square;
+      }
+
+      .ql-editor ol li.ql-indent-2 {
+        list-style-type: lower-roman;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor .ql-indent-2 {
+        margin-left: 6rem;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor li.ql-indent-2 {
+        margin-left: 7.5rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor .ql-indent-2:not(.ql-align-left) {
+        margin-right: 6rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor li.ql-indent-2:not(.ql-align-left) {
+        margin-right: 7.5rem;
+      }
+
+      .ql-editor ul li.ql-indent-3 {
+        list-style-type: disc;
+      }
+
+      .ql-editor ol li.ql-indent-3 {
+        list-style-type: decimal;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor .ql-indent-3 {
+        margin-left: 9rem;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor li.ql-indent-3 {
+        margin-left: 10.5rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor .ql-indent-3:not(.ql-align-left) {
+        margin-right: 9rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor li.ql-indent-3:not(.ql-align-left) {
+        margin-right: 10.5rem;
+      }
+
+      .ql-editor ul li.ql-indent-4 {
+        list-style-type: circle;
+      }
+
+      .ql-editor ol li.ql-indent-4 {
+        list-style-type: lower-alpha;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor .ql-indent-4 {
+        margin-left: 12rem;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor li.ql-indent-4 {
+        margin-left: 13.5rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor .ql-indent-4:not(.ql-align-left) {
+        margin-right: 12rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor li.ql-indent-4:not(.ql-align-left) {
+        margin-right: 13.5rem;
+      }
+
+      .ql-editor ul li.ql-indent-5 {
+        list-style-type: square;
+      }
+
+      .ql-editor ol li.ql-indent-5 {
+        list-style-type: lower-roman;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor .ql-indent-5 {
+        margin-left: 15rem;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor li.ql-indent-5 {
+        margin-left: 16.5rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor .ql-indent-5:not(.ql-align-left) {
+        margin-right: 15rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor li.ql-indent-5:not(.ql-align-left) {
+        margin-right: 16.5rem;
+      }
+
+      .ql-editor ul li.ql-indent-6 {
+        list-style-type: disc;
+      }
+
+      .ql-editor ol li.ql-indent-6 {
+        list-style-type: decimal;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor .ql-indent-6 {
+        margin-left: 18rem;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor li.ql-indent-6 {
+        margin-left: 19.5rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor .ql-indent-6:not(.ql-align-left) {
+        margin-right: 18rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor li.ql-indent-6:not(.ql-align-left) {
+        margin-right: 19.5rem;
+      }
+
+      .ql-editor ul li.ql-indent-7 {
+        list-style-type: circle;
+      }
+
+      .ql-editor ol li.ql-indent-7 {
+        list-style-type: lower-alpha;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor .ql-indent-7 {
+        margin-left: 21rem;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor li.ql-indent-7 {
+        margin-left: 22.5rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor .ql-indent-7:not(.ql-align-left) {
+        margin-right: 21rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor li.ql-indent-7:not(.ql-align-left) {
+        margin-right: 22.5rem;
+      }
+
+      .ql-editor ul li.ql-indent-5 {
+        list-style-type: square;
+      }
+
+      .ql-editor ol li.ql-indent-5 {
+        list-style-type: lower-roman;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor .ql-indent-8 {
+        margin-left: 24rem;
+      }
+
+      :host(:not([dir="rtl"])) .ql-editor li.ql-indent-8 {
+        margin-left: 25.5rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor .ql-indent-8:not(.ql-align-left) {
+        margin-right: 24rem;
+      }
+
+      :host([dir="rtl"]) .ql-editor li.ql-indent-8:not(.ql-align-left) {
+        margin-right: 25.5rem;
+      }
+
       /* quill core end */
 
       blockquote {

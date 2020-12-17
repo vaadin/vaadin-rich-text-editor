@@ -68,11 +68,21 @@
       [part~="toolbar-button-align-left"]::before,
       [part~="toolbar-button-align-center"]::before,
       [part~="toolbar-button-align-right"]::before,
+      [part~="toolbar-button-indent-left"]::before,
+      [part~="toolbar-button-indent-right"]::before,
       [part~="toolbar-button-image"]::before,
       [part~="toolbar-button-link"]::before,
       [part~="toolbar-button-clean"]::before {
         font-size: 24px;
         font-weight: 400;
+      }
+
+      [part~="toolbar-button-indent-left"]::before {
+        content: var(--vaadin-rte-icons-material-indent-left);
+      }
+
+      [part~="toolbar-button-indent-right"]::before {
+        content: var(--vaadin-rte-icons-material-indent-right);
       }
 
       /* Text icons */

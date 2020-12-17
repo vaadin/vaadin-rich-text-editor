@@ -37,16 +37,8 @@
         transform: translate(-50%, -50%);
       }
 
-      [part~="toolbar-button-undo"]::before,
-      [part~="toolbar-button-redo"]::before,
-      [part~="toolbar-button-list-ordered"]::before,
-      [part~="toolbar-button-list-bullet"]::before,
-      [part~="toolbar-button-align-left"]::before,
-      [part~="toolbar-button-align-center"]::before,
-      [part~="toolbar-button-align-right"]::before,
-      [part~="toolbar-button-image"]::before,
-      [part~="toolbar-button-link"]::before,
-      [part~="toolbar-button-clean"]::before {
+      [part~="toolbar-button-indent-left"].ql-indent::before,
+      [part~="toolbar-button-indent-right"].ql-indent::before {
         font-family: "vaadin-rte-icons", sans-serif;
       }
 
