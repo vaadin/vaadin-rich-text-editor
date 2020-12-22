@@ -145,13 +145,6 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
         max-height: inherit;
         flex: auto;
       }
-
-      /* FIXME (Yuriy): workaround for auto-grow feature in flex layout for IE11 */
-      @media all and (-ms-high-contrast: none) {
-        .ql-editor {
-          flex: auto;
-        }
-      }
     </style>
 
     <div class="vaadin-rich-text-editor-container">
