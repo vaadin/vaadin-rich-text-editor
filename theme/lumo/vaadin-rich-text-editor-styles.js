@@ -1,22 +1,21 @@
-<link rel="import" href="../../../vaadin-lumo-styles/color.html">
-<link rel="import" href="../../../vaadin-lumo-styles/font-icons.html">
-<link rel="import" href="../../../vaadin-lumo-styles/sizing.html">
-<link rel="import" href="../../../vaadin-lumo-styles/spacing.html">
-<link rel="import" href="../../../vaadin-lumo-styles/style.html">
-<link rel="import" href="../../../vaadin-lumo-styles/typography.html">
-<link rel="import" href="../../../vaadin-button/theme/lumo/vaadin-button.html">
-<link rel="import" href="../../../vaadin-confirm-dialog/theme/lumo/vaadin-confirm-dialog.html">
-<link rel="import" href="../../../vaadin-text-field/theme/lumo/vaadin-text-field.html">
+import '@vaadin/vaadin-lumo-styles/color.js';
+import '@vaadin/vaadin-lumo-styles/font-icons.js';
+import '@vaadin/vaadin-lumo-styles/sizing.js';
+import '@vaadin/vaadin-lumo-styles/spacing.js';
+import '@vaadin/vaadin-lumo-styles/style.js';
+import '@vaadin/vaadin-lumo-styles/typography.js';
+import '@vaadin/vaadin-button/theme/lumo/vaadin-button.js';
+import '@vaadin/vaadin-confirm-dialog/theme/lumo/vaadin-confirm-dialog.js';
+import '@vaadin/vaadin-text-field/theme/lumo/vaadin-text-field.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
-<dom-module id="lumo-rich-text-editor" theme-for="vaadin-rich-text-editor">
+const $_documentContainer = html`<dom-module id="lumo-rich-text-editor" theme-for="vaadin-rich-text-editor">
   <template>
     <style include="lumo-rich-text-editor-theme lumo-rich-text-editor-content">
       /* empty style block breaks polymer lint. see https://github.com/Polymer/tools/issues/408 */
     </style>
   </template>
-</dom-module>
-
-<dom-module id="lumo-rich-text-editor-theme">
+</dom-module><dom-module id="lumo-rich-text-editor-theme">
   <template>
     <style>
       :host {
@@ -231,12 +230,12 @@
       }
     </style>
   </template>
-</dom-module>
-
-<dom-module id="lumo-rich-text-editor-content">
+</dom-module><dom-module id="lumo-rich-text-editor-content">
   <template>
     <style include="lumo-color lumo-typography">
       /* empty style block breaks polymer lint. see https://github.com/Polymer/tools/issues/408 */
     </style>
   </template>
-</dom-module>
+</dom-module>`;
+
+document.head.appendChild($_documentContainer.content);

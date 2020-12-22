@@ -1,4 +1,6 @@
-<dom-module id="vaadin-rich-text-editor-content-styles">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<dom-module id="vaadin-rich-text-editor-content-styles">
   <template>
     <style>
       [part="content"] {
@@ -105,4 +107,6 @@
       }
     </style>
   </template>
-</dom-module>
+</dom-module>`;
+
+document.head.appendChild($_documentContainer.content);

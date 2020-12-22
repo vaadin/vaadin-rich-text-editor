@@ -1,7 +1,7 @@
-<!-- NOTE: Auto generated with 'gulp icons', do not edit -->
-<link rel="import" href="../../polymer/lib/elements/custom-style.html">
+import '@polymer/polymer/lib/elements/custom-style.js';
+const $_documentContainer = document.createElement('template');
 
-<custom-style>
+$_documentContainer.innerHTML = `<custom-style>
   <style>
     @font-face {
       font-family: 'vaadin-rte-icons';
@@ -11,21 +11,19 @@
     }
 
     html {
-      --vaadin-rte-icons-align-center: "\ea01";
-      --vaadin-rte-icons-align-left: "\ea02";
-      --vaadin-rte-icons-align-right: "\ea03";
-      --vaadin-rte-icons-clean: "\ea04";
-      --vaadin-rte-icons-image: "\ea05";
-      --vaadin-rte-icons-link: "\ea06";
-      --vaadin-rte-icons-list-bullet: "\ea07";
-      --vaadin-rte-icons-list-ordered: "\ea08";
-      --vaadin-rte-icons-redo: "\ea09";
-      --vaadin-rte-icons-undo: "\ea0a";
+      --vaadin-rte-icons-align-center: "\\ea01";
+      --vaadin-rte-icons-align-left: "\\ea02";
+      --vaadin-rte-icons-align-right: "\\ea03";
+      --vaadin-rte-icons-clean: "\\ea04";
+      --vaadin-rte-icons-image: "\\ea05";
+      --vaadin-rte-icons-link: "\\ea06";
+      --vaadin-rte-icons-list-bullet: "\\ea07";
+      --vaadin-rte-icons-list-ordered: "\\ea08";
+      --vaadin-rte-icons-redo: "\\ea09";
+      --vaadin-rte-icons-undo: "\\ea0a";
     }
   </style>
-</custom-style>
-
-<dom-module id="vaadin-rich-text-editor-icons">
+</custom-style><dom-module id="vaadin-rich-text-editor-icons">
   <template>
     <style>
       [part~="toolbar-button-align-center"]::before {
@@ -79,4 +77,14 @@
       }
     </style>
   </template>
-</dom-module>
+</dom-module>`;
+
+document.head.appendChild($_documentContainer.content);
+
+/* NOTE: Auto generated with 'gulp icons', do not edit */
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+;

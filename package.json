@@ -1,9 +1,5 @@
 {
-  "name": "@vaadin/vaadin-rich-text-editor",
-  "version": "1.3.0",
   "description": "vaadin-rich-text-editor",
-  "main": "vaadin-rich-text-editor.html",
-  "repository": "vaadin/vaadin-rich-text-editor",
   "keywords": [
     "Vaadin",
     "vaadin-rich-text-editor",
@@ -11,12 +7,16 @@
     "web-component",
     "polymer"
   ],
+  "repository": "vaadin/vaadin-rich-text-editor",
+  "homepage": "https://vaadin.com/components",
+  "name": "@vaadin/vaadin-rich-text-editor",
+  "version": "1.3.0",
+  "main": "vaadin-rich-text-editor.js",
   "author": "Vaadin Ltd",
   "license": "https://raw.githubusercontent.com/vaadin/vaadin-rich-text-editor/master/LICENSE",
   "bugs": {
     "url": "https://github.com/vaadin/vaadin-rich-text-editor/issues"
   },
-  "homepage": "https://vaadin.com/components",
   "files": [
     "vaadin-*.d.ts",
     "vaadin-*.js",
@@ -25,30 +25,33 @@
     "vendor",
     "theme"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint"
-    }
+  "resolutions": {
+    "es-abstract": "1.17.6",
+    "@types/doctrine": "0.0.3",
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  },
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0",
+    "@vaadin/vaadin-themable-mixin": "^1.6.1",
+    "@vaadin/vaadin-element-mixin": "^2.4.1",
+    "@vaadin/vaadin-button": "^2.4.0",
+    "@vaadin/vaadin-confirm-dialog": "^1.3.0",
+    "@vaadin/vaadin-text-field": "^2.7.0",
+    "@vaadin/vaadin-license-checker": "^2.1.0",
+    "@vaadin/vaadin-lumo-styles": "^1.6.0",
+    "@vaadin/vaadin-material-styles": "^1.3.2"
   },
   "scripts": {
-    "test": "wct",
-    "check": "npm-run-all --parallel check:*",
-    "check:bower": "magi check-bower",
-    "check:version": "magi check-version",
-    "icons": "gulp icons",
-    "lint": "npm-run-all --parallel lint:*",
-    "lint:css": "stylelint *.html src/*.html demo/*.html theme/**/*.html test/*html",
-    "lint:html": "eslint *.html src demo test --ext .html",
-    "lint:js": "eslint *.js test",
-    "lint:polymer": "polymer lint --rules polymer-2 --input ./src/*.html ./theme/**/*.html",
-    "prestart": "polymer analyze vaadin-* > analysis.json",
-    "start": "polymer serve --port 3000 --open",
-    "preversion": "magi update-version"
+    "generate-typings": "gen-typescript-declarations --outDir . --verify"
   },
   "devDependencies": {
-    "@vaadin/vaadin-component-dev-dependencies": "^3.0.0",
-    "gulp": "^4.0.0",
-    "gulp-cli": "^2.0.1",
-    "gulp-iconfont": "^10.0.1"
+    "@web-padawan/gen-typescript-declarations": "^1.6.2",
+    "@polymer/iron-component-page": "^4.0.0",
+    "@polymer/iron-test-helpers": "^3.0.0",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "wct-browser-legacy": "^1.0.1"
   }
 }

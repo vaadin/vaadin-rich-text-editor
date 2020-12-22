@@ -1,18 +1,17 @@
-<link rel="import" href="../../../vaadin-material-styles/color.html">
-<link rel="import" href="../../../vaadin-material-styles/typography.html">
-<link rel="import" href="../../../vaadin-button/theme/material/vaadin-button.html">
-<link rel="import" href="../../../vaadin-confirm-dialog/theme/material/vaadin-confirm-dialog.html">
-<link rel="import" href="../../../vaadin-text-field/theme/material/vaadin-text-field.html">
+import '@vaadin/vaadin-material-styles/color.js';
+import '@vaadin/vaadin-material-styles/typography.js';
+import '@vaadin/vaadin-button/theme/material/vaadin-button.js';
+import '@vaadin/vaadin-confirm-dialog/theme/material/vaadin-confirm-dialog.js';
+import '@vaadin/vaadin-text-field/theme/material/vaadin-text-field.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
-<dom-module id="material-rich-text-editor" theme-for="vaadin-rich-text-editor">
+const $_documentContainer = html`<dom-module id="material-rich-text-editor" theme-for="vaadin-rich-text-editor">
   <template>
     <style include="material-rich-text-editor-theme material-rich-text-editor-content">
       /* empty style block breaks polymer lint. see https://github.com/Polymer/tools/issues/408 */
     </style>
   </template>
-</dom-module>
-
-<dom-module id="material-rich-text-editor-theme">
+</dom-module><dom-module id="material-rich-text-editor-theme">
   <template>
     <style>
       :host {
@@ -102,9 +101,7 @@
       }
     </style>
   </template>
-</dom-module>
-
-<dom-module id="material-rich-text-editor-content">
+</dom-module><dom-module id="material-rich-text-editor-content">
   <template>
     <style include="material-color material-typography">
       b,
@@ -113,4 +110,6 @@
       }
     </style>
   </template>
-</dom-module>
+</dom-module>`;
+
+document.head.appendChild($_documentContainer.content);
