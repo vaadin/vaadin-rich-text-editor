@@ -1,7 +1,6 @@
-import '@polymer/polymer/lib/elements/custom-style.js';
 const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<custom-style>
+$_documentContainer.innerHTML = `
   <style>
     @font-face {
       font-family: 'vaadin-rte-icons';
@@ -23,7 +22,7 @@ $_documentContainer.innerHTML = `<custom-style>
       --vaadin-rte-icons-undo: "\\ea0a";
     }
   </style>
-</custom-style><dom-module id="vaadin-rich-text-editor-icons">
+<dom-module id="vaadin-rich-text-editor-icons">
   <template>
     <style>
       [part~="toolbar-button-align-center"]::before {
@@ -82,9 +81,4 @@ $_documentContainer.innerHTML = `<custom-style>
 document.head.appendChild($_documentContainer.content);
 
 /* NOTE: Auto generated with 'gulp icons', do not edit */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-;
+
