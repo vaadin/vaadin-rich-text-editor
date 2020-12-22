@@ -1,16 +1,6 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
-
-import {resetMouseCanceller} from '@polymer/polymer/lib/utils/gestures.js';
-
 import {ThemableMixin} from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 
 import {ElementMixin} from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
-
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
 
 /**
  * `<vaadin-rich-text-editor>` is a Web Component for rich text editing.
@@ -79,7 +69,7 @@ import {html} from '@polymer/polymer/lib/utils/html-tag.js';
 declare class RichTextEditorElement extends
   ElementMixin(
   ThemableMixin(
-  PolymerElement)) {
+  HTMLElement)) {
 
   /**
    * Value is a list of the operations which describe change to the document.
@@ -117,9 +107,6 @@ declare class RichTextEditorElement extends
    * e.g. as the tooltips for the editor toolbar buttons.
    */
   i18n: RichTextEditorI18n;
-  static _finalizeClass(): void;
-  ready(): void;
-  attributeChangedCallback(prop: string, oldVal: string|null, newVal: string|null): void;
 
   /**
    * Sets content represented by HTML snippet into the editor.

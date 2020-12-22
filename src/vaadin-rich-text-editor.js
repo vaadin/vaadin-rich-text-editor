@@ -113,7 +113,7 @@ const TAB_KEY = 9;
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
- * @extends PolymerElement
+ * @extends HTMLElement
  * @mixes ElementMixin
  * @mixes ThemableMixin
  */
