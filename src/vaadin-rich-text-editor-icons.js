@@ -1,3 +1,7 @@
+import { registerStyles, css } from '@vaadin/vaadin-themable-mixin/register-styles.js';
+
+/* TODO: restore script to generate this file automatically. */
+
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `
@@ -22,63 +26,60 @@ $_documentContainer.innerHTML = `
       --vaadin-rte-icons-undo: "\\ea0a";
     }
   </style>
-<dom-module id="vaadin-rich-text-editor-icons">
-  <template>
-    <style>
-      [part~="toolbar-button-align-center"]::before {
-        content: var(--vaadin-rte-icons-align-center);
-      }
-
-      [part~="toolbar-button-align-left"]::before {
-        content: var(--vaadin-rte-icons-align-left);
-      }
-
-      [part~="toolbar-button-align-right"]::before {
-        content: var(--vaadin-rte-icons-align-right);
-      }
-
-      [part~="toolbar-button-clean"]::before {
-        content: var(--vaadin-rte-icons-clean);
-      }
-
-      [part~="toolbar-button-image"]::before {
-        content: var(--vaadin-rte-icons-image);
-      }
-
-      [part~="toolbar-button-link"]::before {
-        content: var(--vaadin-rte-icons-link);
-      }
-
-      [part~="toolbar-button-list-bullet"]::before {
-        content: var(--vaadin-rte-icons-list-bullet);
-      }
-
-      [part~="toolbar-button-list-ordered"]::before {
-        content: var(--vaadin-rte-icons-list-ordered);
-      }
-
-      [part~="toolbar-button-redo"]::before {
-        content: var(--vaadin-rte-icons-redo);
-      }
-
-      [part~="toolbar-button-undo"]::before {
-        content: var(--vaadin-rte-icons-undo);
-      }
-
-      /* RTL specific styles */
-
-      :host([dir="rtl"]) [part~="toolbar-button-redo"]::before {
-        content: var(--vaadin-rte-icons-undo);
-      }
-
-      :host([dir="rtl"]) [part~="toolbar-button-undo"]::before {
-        content: var(--vaadin-rte-icons-redo);
-      }
-    </style>
-  </template>
-</dom-module>`;
+`;
 
 document.head.appendChild($_documentContainer.content);
 
-/* NOTE: Auto generated with 'gulp icons', do not edit */
+export const iconsStyles = css`
+  [part~='toolbar-button-align-center']::before {
+    content: var(--vaadin-rte-icons-align-center);
+  }
 
+  [part~='toolbar-button-align-left']::before {
+    content: var(--vaadin-rte-icons-align-left);
+  }
+
+  [part~='toolbar-button-align-right']::before {
+    content: var(--vaadin-rte-icons-align-right);
+  }
+
+  [part~='toolbar-button-clean']::before {
+    content: var(--vaadin-rte-icons-clean);
+  }
+
+  [part~='toolbar-button-image']::before {
+    content: var(--vaadin-rte-icons-image);
+  }
+
+  [part~='toolbar-button-link']::before {
+    content: var(--vaadin-rte-icons-link);
+  }
+
+  [part~='toolbar-button-list-bullet']::before {
+    content: var(--vaadin-rte-icons-list-bullet);
+  }
+
+  [part~='toolbar-button-list-ordered']::before {
+    content: var(--vaadin-rte-icons-list-ordered);
+  }
+
+  [part~='toolbar-button-redo']::before {
+    content: var(--vaadin-rte-icons-redo);
+  }
+
+  [part~='toolbar-button-undo']::before {
+    content: var(--vaadin-rte-icons-undo);
+  }
+
+  /* RTL specific styles */
+  :host([dir='rtl']) [part~='toolbar-button-redo']::before {
+    content: var(--vaadin-rte-icons-undo);
+  }
+
+  :host([dir='rtl']) [part~='toolbar-button-undo']::before {
+    content: var(--vaadin-rte-icons-redo);
+  }
+`;
+
+// Register a module with ID for backwards compatibility.
+registerStyles('', iconsStyles, { moduleId: 'vaadin-rich-text-editor-icons' });

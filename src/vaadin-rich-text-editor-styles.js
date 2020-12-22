@@ -1,27 +1,28 @@
-import './vaadin-rich-text-editor-content-styles.js';
-import './vaadin-rich-text-editor-toolbar-styles.js';
-const $_documentContainer = document.createElement('template');
+import { registerStyles, css } from '@vaadin/vaadin-themable-mixin/register-styles.js';
+import { contentStyles } from './vaadin-rich-text-editor-content-styles.js';
+import { toolbarStyles } from './vaadin-rich-text-editor-toolbar-styles.js';
 
-$_documentContainer.innerHTML = `<dom-module id="vaadin-rich-text-editor-styles">
-  <template>
-    <style include="vaadin-rich-text-editor-content-styles vaadin-rich-text-editor-toolbar-styles">
-      :host([readonly]) [part="toolbar"] {
-        display: none;
-      }
+registerStyles(
+  '',
+  css`
+    ${contentStyles}
+    ${toolbarStyles}
 
-      :host([disabled]) {
-        pointer-events: none;
-        opacity: 0.5;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
+    :host([readonly]) [part='toolbar'] {
+      display: none;
+    }
 
-      :host([disabled]) [part~="toolbar-button"] {
-        background-color: transparent;
-      }
-    </style>
-  </template>
-</dom-module>`;
+    :host([disabled]) {
+      pointer-events: none;
+      opacity: 0.5;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
 
-document.head.appendChild($_documentContainer.content);
+    :host([disabled]) [part~='toolbar-button'] {
+      background-color: transparent;
+    }
+  `,
+  { moduleId: 'vaadin-rich-text-editor-styles' }
+);
