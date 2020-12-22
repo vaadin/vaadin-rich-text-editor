@@ -673,7 +673,7 @@ describe('rich text editor', () => {
 
     const getHtml = (htmlValue) => {
       const div = document.createElement('div');
-      div.innerHTML = rte.htmlValue;
+      div.innerHTML = htmlValue;
       return div.firstChild;
     };
 

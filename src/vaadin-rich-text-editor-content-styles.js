@@ -34,8 +34,8 @@ export const contentStyles = css`
     outline: none;
     overflow-y: auto;
     padding: 0.75em 1em;
-    tab-size: 4;
     -moz-tab-size: 4;
+    tab-size: 4;
     text-align: left;
     white-space: pre-wrap;
     word-wrap: break-word;

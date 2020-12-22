@@ -1,6 +1,6 @@
-import {ThemableMixin} from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
+import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 
-import {ElementMixin} from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
+import { ElementMixin } from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
 
 /**
  * `<vaadin-rich-text-editor>` is a Web Component for rich text editing.
@@ -66,11 +66,7 @@ import {ElementMixin} from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  */
-declare class RichTextEditorElement extends
-  ElementMixin(
-  ThemableMixin(
-  HTMLElement)) {
-
+declare class RichTextEditorElement extends ElementMixin(ThemableMixin(HTMLElement)) {
   /**
    * Value is a list of the operations which describe change to the document.
    * Each of those operations describe the change at the current index.
@@ -90,7 +86,7 @@ declare class RichTextEditorElement extends
   /**
    * HTML representation of the rich text editor content.
    */
-  readonly htmlValue: string|null|undefined;
+  readonly htmlValue: string | null | undefined;
 
   /**
    * When true, the user can not modify, nor copy the editor content.
@@ -121,12 +117,11 @@ declare class RichTextEditorElement extends
 }
 
 declare global {
-
   interface HTMLElementTagNameMap {
-    "vaadin-rich-text-editor": RichTextEditorElement;
+    'vaadin-rich-text-editor': RichTextEditorElement;
   }
 }
 
-export {RichTextEditorElement};
+export { RichTextEditorElement };
 
-import {RichTextEditorI18n} from '../@types/interfaces';
+import { RichTextEditorI18n } from '../@types/interfaces';

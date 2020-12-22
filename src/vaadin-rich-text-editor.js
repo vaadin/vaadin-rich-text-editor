@@ -117,129 +117,240 @@ const TAB_KEY = 9;
 class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) {
   static get template() {
     return html`
-    <style include="vaadin-rich-text-editor-styles">
-      :host {
-        display: flex;
-        flex-direction: column;
-        box-sizing: border-box;
-        overflow: hidden;
-      }
+      <style include="vaadin-rich-text-editor-styles">
+        :host {
+          display: flex;
+          flex-direction: column;
+          box-sizing: border-box;
+          overflow: hidden;
+        }
 
-      :host([hidden]) {
-        display: none !important;
-      }
+        :host([hidden]) {
+          display: none !important;
+        }
 
-      .announcer {
-        position: fixed;
-        clip: rect(0, 0, 0, 0);
-      }
+        .announcer {
+          position: fixed;
+          clip: rect(0, 0, 0, 0);
+        }
 
-      input[type="file"] {
-        display: none;
-      }
+        input[type='file'] {
+          display: none;
+        }
 
-      .vaadin-rich-text-editor-container {
-        display: flex;
-        flex-direction: column;
-        min-height: inherit;
-        max-height: inherit;
-        flex: auto;
-      }
-    </style>
+        .vaadin-rich-text-editor-container {
+          display: flex;
+          flex-direction: column;
+          min-height: inherit;
+          max-height: inherit;
+          flex: auto;
+        }
+      </style>
 
-    <div class="vaadin-rich-text-editor-container">
+      <div class="vaadin-rich-text-editor-container">
+        <!-- Create toolbar container -->
+        <div part="toolbar">
+          <span part="toolbar-group toolbar-group-history">
+            <!-- Undo and Redo -->
+            <button
+              type="button"
+              part="toolbar-button toolbar-button-undo"
+              on-click="_undo"
+              title$="[[i18n.undo]]"
+            ></button>
+            <button
+              type="button"
+              part="toolbar-button toolbar-button-redo"
+              on-click="_redo"
+              title$="[[i18n.redo]]"
+            ></button>
+          </span>
 
-      <!-- Create toolbar container -->
-      <div part="toolbar">
+          <span part="toolbar-group toolbar-group-emphasis">
+            <!-- Bold -->
+            <button class="ql-bold" part="toolbar-button toolbar-button-bold" title$="[[i18n.bold]]"></button>
 
-        <span part="toolbar-group toolbar-group-history">
-          <!-- Undo and Redo -->
-          <button type="button" part="toolbar-button toolbar-button-undo" on-click="_undo" title\$="[[i18n.undo]]"></button>
-          <button type="button" part="toolbar-button toolbar-button-redo" on-click="_redo" title\$="[[i18n.redo]]"></button>
-        </span>
+            <!-- Italic -->
+            <button class="ql-italic" part="toolbar-button toolbar-button-italic" title$="[[i18n.italic]]"></button>
 
-        <span part="toolbar-group toolbar-group-emphasis">
-          <!-- Bold -->
-          <button class="ql-bold" part="toolbar-button toolbar-button-bold" title\$="[[i18n.bold]]"></button>
+            <!-- Underline -->
+            <button
+              class="ql-underline"
+              part="toolbar-button toolbar-button-underline"
+              title$="[[i18n.underline]]"
+            ></button>
 
-          <!-- Italic -->
-          <button class="ql-italic" part="toolbar-button toolbar-button-italic" title\$="[[i18n.italic]]"></button>
+            <!-- Strike -->
+            <button class="ql-strike" part="toolbar-button toolbar-button-strike" title$="[[i18n.strike]]"></button>
+          </span>
 
-          <!-- Underline -->
-          <button class="ql-underline" part="toolbar-button toolbar-button-underline" title\$="[[i18n.underline]]"></button>
+          <span part="toolbar-group toolbar-group-heading">
+            <!-- Header buttons -->
+            <button
+              type="button"
+              class="ql-header"
+              value="1"
+              part="toolbar-button toolbar-button-h1"
+              title$="[[i18n.h1]]"
+            ></button>
+            <button
+              type="button"
+              class="ql-header"
+              value="2"
+              part="toolbar-button toolbar-button-h2"
+              title$="[[i18n.h2]]"
+            ></button>
+            <button
+              type="button"
+              class="ql-header"
+              value="3"
+              part="toolbar-button toolbar-button-h3"
+              title$="[[i18n.h3]]"
+            ></button>
+          </span>
 
-          <!-- Strike -->
-          <button class="ql-strike" part="toolbar-button toolbar-button-strike" title\$="[[i18n.strike]]"></button>
-        </span>
+          <span part="toolbar-group toolbar-group-glyph-transformation">
+            <!-- Subscript and superscript -->
+            <button
+              class="ql-script"
+              value="sub"
+              part="toolbar-button toolbar-button-subscript"
+              title$="[[i18n.subscript]]"
+            ></button>
+            <button
+              class="ql-script"
+              value="super"
+              part="toolbar-button toolbar-button-superscript"
+              title$="[[i18n.superscript]]"
+            ></button>
+          </span>
 
-        <span part="toolbar-group toolbar-group-heading">
-          <!-- Header buttons -->
-          <button type="button" class="ql-header" value="1" part="toolbar-button toolbar-button-h1" title\$="[[i18n.h1]]"></button>
-          <button type="button" class="ql-header" value="2" part="toolbar-button toolbar-button-h2" title\$="[[i18n.h2]]"></button>
-          <button type="button" class="ql-header" value="3" part="toolbar-button toolbar-button-h3" title\$="[[i18n.h3]]"></button>
-        </span>
+          <span part="toolbar-group toolbar-group-list">
+            <!-- List buttons -->
+            <button
+              type="button"
+              class="ql-list"
+              value="ordered"
+              part="toolbar-button toolbar-button-list-ordered"
+              title$="[[i18n.listOrdered]]"
+            ></button>
+            <button
+              type="button"
+              class="ql-list"
+              value="bullet"
+              part="toolbar-button toolbar-button-list-bullet"
+              title$="[[i18n.listBullet]]"
+            ></button>
+          </span>
 
-        <span part="toolbar-group toolbar-group-glyph-transformation">
-          <!-- Subscript and superscript -->
-          <button class="ql-script" value="sub" part="toolbar-button toolbar-button-subscript" title\$="[[i18n.subscript]]"></button>
-          <button class="ql-script" value="super" part="toolbar-button toolbar-button-superscript" title\$="[[i18n.superscript]]"></button>
-        </span>
+          <span part="toolbar-group toolbar-group-alignment">
+            <!-- Align buttons -->
+            <button
+              type="button"
+              class="ql-align"
+              value=""
+              part="toolbar-button toolbar-button-align-left"
+              title$="[[i18n.alignLeft]]"
+            ></button>
+            <button
+              type="button"
+              class="ql-align"
+              value="center"
+              part="toolbar-button toolbar-button-align-center"
+              title$="[[i18n.alignCenter]]"
+            ></button>
+            <button
+              type="button"
+              class="ql-align"
+              value="right"
+              part="toolbar-button toolbar-button-align-right"
+              title$="[[i18n.alignRight]]"
+            ></button>
+          </span>
 
-        <span part="toolbar-group toolbar-group-list">
-          <!-- List buttons -->
-          <button type="button" class="ql-list" value="ordered" part="toolbar-button toolbar-button-list-ordered" title\$="[[i18n.listOrdered]]"></button>
-          <button type="button" class="ql-list" value="bullet" part="toolbar-button toolbar-button-list-bullet" title\$="[[i18n.listBullet]]"></button>
-        </span>
+          <span part="toolbar-group toolbar-group-rich-text">
+            <!-- Image -->
+            <button
+              type="button"
+              part="toolbar-button toolbar-button-image"
+              title$="[[i18n.image]]"
+              on-touchend="_onImageTouchEnd"
+              on-click="_onImageClick"
+            ></button>
+            <!-- Link -->
+            <button
+              type="button"
+              part="toolbar-button toolbar-button-link"
+              title$="[[i18n.link]]"
+              on-click="_onLinkClick"
+            ></button>
+          </span>
 
-        <span part="toolbar-group toolbar-group-alignment">
-          <!-- Align buttons -->
-          <button type="button" class="ql-align" value="" part="toolbar-button toolbar-button-align-left" title\$="[[i18n.alignLeft]]"></button>
-          <button type="button" class="ql-align" value="center" part="toolbar-button toolbar-button-align-center" title\$="[[i18n.alignCenter]]"></button>
-          <button type="button" class="ql-align" value="right" part="toolbar-button toolbar-button-align-right" title\$="[[i18n.alignRight]]"></button>
-        </span>
+          <span part="toolbar-group toolbar-group-block">
+            <!-- Blockquote -->
+            <button
+              type="button"
+              class="ql-blockquote"
+              part="toolbar-button toolbar-button-blockquote"
+              title$="[[i18n.blockquote]]"
+            ></button>
 
-        <span part="toolbar-group toolbar-group-rich-text">
-          <!-- Image -->
-          <button type="button" part="toolbar-button toolbar-button-image" title\$="[[i18n.image]]" on-touchend="_onImageTouchEnd" on-click="_onImageClick"></button>
-          <!-- Link -->
-          <button type="button" part="toolbar-button toolbar-button-link" title\$="[[i18n.link]]" on-click="_onLinkClick"></button>
-        </span>
+            <!-- Code block -->
+            <button
+              type="button"
+              class="ql-code-block"
+              part="toolbar-button toolbar-button-code-block"
+              title$="[[i18n.codeBlock]]"
+            ></button>
+          </span>
 
-        <span part="toolbar-group toolbar-group-block">
-          <!-- Blockquote -->
-          <button type="button" class="ql-blockquote" part="toolbar-button toolbar-button-blockquote" title\$="[[i18n.blockquote]]"></button>
+          <span part="toolbar-group toolbar-group-format">
+            <!-- Clean -->
+            <button
+              type="button"
+              class="ql-clean"
+              part="toolbar-button toolbar-button-clean"
+              title$="[[i18n.clean]]"
+            ></button>
+          </span>
 
-          <!-- Code block -->
-          <button type="button" class="ql-code-block" part="toolbar-button toolbar-button-code-block" title\$="[[i18n.codeBlock]]"></button>
-        </span>
+          <input
+            id="fileInput"
+            type="file"
+            accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon"
+            on-change="_uploadImage"
+          />
+        </div>
 
-        <span part="toolbar-group toolbar-group-format">
-          <!-- Clean -->
-          <button type="button" class="ql-clean" part="toolbar-button toolbar-button-clean" title\$="[[i18n.clean]]"></button>
-        </span>
+        <div part="content"></div>
 
-        <input id="fileInput" type="file" accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon" on-change="_uploadImage">
+        <div class="announcer" aria-live="polite"></div>
       </div>
 
-      <div part="content"></div>
-
-      <div class="announcer" aria-live="polite"></div>
-
-    </div>
-
-    <vaadin-confirm-dialog id="linkDialog" opened="{{_linkEditing}}" header="[[i18n.linkDialogTitle]]">
-      <vaadin-text-field id="linkUrl" value="{{_linkUrl}}" style="width: 100%;" on-keydown="_onLinkKeydown"></vaadin-text-field>
-      <vaadin-button id="confirmLink" slot="confirm-button" theme="primary" on-click="_onLinkEditConfirm">
-        [[i18n.ok]]
-      </vaadin-button>
-      <vaadin-button id="removeLink" slot="reject-button" theme="error" on-click="_onLinkEditRemove" hidden\$="[[!_linkRange]]">
-        [[i18n.remove]]
-      </vaadin-button>
-      <vaadin-button id="cancelLink" slot="cancel-button" on-click="_onLinkEditCancel">
-        [[i18n.cancel]]
-      </vaadin-button>
-    </vaadin-confirm-dialog>
-`;
+      <vaadin-confirm-dialog id="linkDialog" opened="{{_linkEditing}}" header="[[i18n.linkDialogTitle]]">
+        <vaadin-text-field
+          id="linkUrl"
+          value="{{_linkUrl}}"
+          style="width: 100%;"
+          on-keydown="_onLinkKeydown"
+        ></vaadin-text-field>
+        <vaadin-button id="confirmLink" slot="confirm-button" theme="primary" on-click="_onLinkEditConfirm">
+          [[i18n.ok]]
+        </vaadin-button>
+        <vaadin-button
+          id="removeLink"
+          slot="reject-button"
+          theme="error"
+          on-click="_onLinkEditRemove"
+          hidden$="[[!_linkRange]]"
+        >
+          [[i18n.remove]]
+        </vaadin-button>
+        <vaadin-button id="cancelLink" slot="cancel-button" on-click="_onLinkEditCancel">
+          [[i18n.cancel]]
+        </vaadin-button>
+      </vaadin-confirm-dialog>
+    `;
   }
 
   static get is() {
@@ -385,10 +496,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
   }
 
   static get observers() {
-    return [
-      '_valueChanged(value, _editor)',
-      '_disabledChanged(disabled, readonly, _editor)'
-    ];
+    return ['_valueChanged(value, _editor)', '_disabledChanged(disabled, readonly, _editor)'];
   }
 
   /** @protected */
@@ -420,7 +528,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
       /* istanbul ignore if */
       if (isIOS && this.shadowRoot && parseInt(navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/)[1], 10)) {
         const WEBKIT_PROPERTY = '-webkit-backface-visibility';
-        this.shadowRoot.querySelectorAll('*').forEach(el => {
+        this.shadowRoot.querySelectorAll('*').forEach((el) => {
           el.style[WEBKIT_PROPERTY] = 'visible';
           el.style[WEBKIT_PROPERTY] = '';
         });
@@ -484,18 +592,14 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
     editorContent.setAttribute('role', 'textbox');
     editorContent.setAttribute('aria-multiline', 'true');
 
-    this._editor.on('text-change', (delta, oldDelta, source) => {
+    this._editor.on('text-change', () => {
       const timeout = 200;
-      this.__debounceSetValue = Debouncer.debounce(
-        this.__debounceSetValue,
-        timeOut.after(timeout),
-        () => {
-          this.value = JSON.stringify(this._editor.getContents().ops);
-        }
-      );
+      this.__debounceSetValue = Debouncer.debounce(this.__debounceSetValue, timeOut.after(timeout), () => {
+        this.value = JSON.stringify(this._editor.getContents().ops);
+      });
     });
 
-    editorContent.addEventListener('focusout', e => {
+    editorContent.addEventListener('focusout', () => {
       if (this._toolbarState === STATE.FOCUSED) {
         this._cleanToolbarState();
       } else {
@@ -503,7 +607,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
       }
     });
 
-    editorContent.addEventListener('focus', e => {
+    editorContent.addEventListener('focus', () => {
       // format changed, but no value changed happened
       if (this._toolbarState === STATE.CLICKED) {
         this._cleanToolbarState();
@@ -521,15 +625,15 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
     const toolbar = {
       container: this.shadowRoot.querySelector('[part="toolbar"]'),
       handlers: {
-        clean: function() {
+        clean: function () {
           self._markToolbarClicked();
           clean.call(this);
         }
       }
     };
 
-    HANDLERS.forEach(handler => {
-      toolbar.handlers[handler] = value => {
+    HANDLERS.forEach((handler) => {
+      toolbar.handlers[handler] = (value) => {
         this._markToolbarClicked();
         this._editor.format(handler, value, SOURCE.USER);
       };
@@ -546,7 +650,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
     // Disable tabbing to all buttons but the first one
     buttons.forEach((button, index) => index > 0 && button.setAttribute('tabindex', '-1'));
 
-    toolbar.addEventListener('keydown', e => {
+    toolbar.addEventListener('keydown', (e) => {
       // Use roving tab-index for the toolbar buttons
       if ([37, 39].indexOf(e.keyCode) > -1) {
         e.preventDefault();
@@ -568,7 +672,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
     });
 
     // mousedown happens before editor focusout
-    toolbar.addEventListener('mousedown', e => {
+    toolbar.addEventListener('mousedown', (e) => {
       if (buttons.indexOf(e.composedPath()[0]) > -1) {
         this._markToolbarFocused();
       }
@@ -621,7 +725,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
       document.body.appendChild(this.__fakeTarget);
       // let the focus step out of shadow root!
       this.__fakeTarget.focus();
-      return new Promise(resolve => setTimeout(resolve));
+      return new Promise((resolve) => setTimeout(resolve));
     };
 
     const focusBack = (offsetNode, offset) => {
@@ -634,17 +738,17 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
       isFake = false;
     };
 
-    editorContent.addEventListener('mousedown', e => {
+    editorContent.addEventListener('mousedown', (e) => {
       if (!this._editor.hasFocus()) {
-        const {x, y} = e;
-        const {offset, offsetNode} = document.caretPositionFromPoint(x, y);
+        const { x, y } = e;
+        const { offset, offsetNode } = document.caretPositionFromPoint(x, y);
         focusFake().then(() => {
           focusBack(offsetNode, offset);
         });
       }
     });
 
-    editorContent.addEventListener('focusin', e => {
+    editorContent.addEventListener('focusin', () => {
       if (isFake === false) {
         focusFake().then(() => focusBack());
       }
@@ -659,10 +763,10 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
     // add custom link button to toggle state attribute
     toolbar.controls.push(['link', this.shadowRoot.querySelector('[part~="toolbar-button-link"]')]);
 
-    toolbar.update = function(range) {
+    toolbar.update = function (range) {
       update.call(toolbar, range);
 
-      toolbar.controls.forEach(pair => {
+      toolbar.controls.forEach((pair) => {
         const input = pair[1];
         if (input.classList.contains('ql-active')) {
           input.setAttribute('on', '');
@@ -686,13 +790,13 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
     // exclude Quill shift-tab bindings, except for code block,
     // as some of those are breaking when on a newline in the list
     // https://github.com/vaadin/vaadin-rich-text-editor/issues/67
-    const originalBindings = bindings.filter(b => !b.shiftKey || b.format && b.format['code-block']);
-    const moveFocusBinding = {key: TAB_KEY, shiftKey: true, handler: focusToolbar};
+    const originalBindings = bindings.filter((b) => !b.shiftKey || (b.format && b.format['code-block']));
+    const moveFocusBinding = { key: TAB_KEY, shiftKey: true, handler: focusToolbar };
 
     keyboard.bindings[TAB_KEY] = [...originalBindings, moveFocusBinding];
 
     // alt-f10 focuses a toolbar button
-    keyboard.addBinding({key: 121, altKey: true, handler: focusToolbar});
+    keyboard.addBinding({ key: 121, altKey: true, handler: focusToolbar });
   }
 
   /** @private */
@@ -705,7 +809,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
     }
 
     if (lastCommittedChange !== this.value) {
-      this.dispatchEvent(new CustomEvent('change', {bubbles: true, cancelable: false}));
+      this.dispatchEvent(new CustomEvent('change', { bubbles: true, cancelable: false }));
       this.__lastCommittedChange = this.value;
     }
   }
@@ -718,7 +822,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
       const [link, offset] = this._editor.scroll.descendant(LinkBlot, range.index);
       if (link != null) {
         // existing link
-        this._linkRange = {index: range.index - offset, length: link.length()};
+        this._linkRange = { index: range.index - offset, length: link.length() };
         this._linkUrl = LinkBlot.formats(link.domNode);
       } else if (range.length === 0) {
         this._linkIndex = range.index;
@@ -741,7 +845,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
   _insertLink(link, position) {
     if (link) {
       this._markToolbarClicked();
-      this._editor.insertText(position, link, {link});
+      this._editor.insertText(position, link, { link });
       this._editor.setSelection(position, link.length);
     }
     this._closeLinkDialog();
@@ -758,7 +862,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
   _removeLink() {
     this._markToolbarClicked();
     if (this._linkRange != null) {
-      this._editor.formatText(this._linkRange, {link: false, color: false}, SOURCE.USER);
+      this._editor.formatText(this._linkRange, { link: false, color: false }, SOURCE.USER);
     }
     this._closeLinkDialog();
   }
@@ -810,14 +914,17 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
     let content = editor.innerHTML;
 
     // Remove style-scoped classes that are appended when ShadyDOM is enabled
-    Array.from(editor.classList).forEach(c => content = content.replace(new RegExp('\\s*' + c, 'g'), ''));
+    Array.from(editor.classList).forEach((c) => (content = content.replace(new RegExp('\\s*' + c, 'g'), '')));
 
     // Remove Quill classes, e.g. ql-syntax, except for align
-    content = content.replace(/\s*ql-(?!align)[\w\-]*\s*/g, '');
+    content = content.replace(/\s*ql-(?!align)[\w-]*\s*/g, '');
 
     // Replace Quill align classes with inline styles
-    [this.__dir === 'rtl' ? 'left' : 'right', 'center', 'justify'].forEach(align => {
-      content = content.replace(new RegExp(` class=[\\\\]?"\\s?ql-align-${align}[\\\\]?"`, 'g'), ` style="text-align: ${align}"`);
+    [this.__dir === 'rtl' ? 'left' : 'right', 'center', 'justify'].forEach((align) => {
+      content = content.replace(
+        new RegExp(` class=[\\\\]?"\\s?ql-align-${align}[\\\\]?"`, 'g'),
+        ` style="text-align: ${align}"`
+      );
     });
 
     content = content.replace(/ class=""/g, '');
@@ -852,7 +959,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
       timeOut.after(timeout),
       () => {
         const formatting = Array.from(this.shadowRoot.querySelectorAll('[part="toolbar"] .ql-active'))
-          .map(button => button.getAttribute('title'))
+          .map((button) => button.getAttribute('title'))
           .join(', ');
         announcer.textContent = formatting;
       }
@@ -861,7 +968,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
 
   /** @private */
   get _toolbarButtons() {
-    return Array.from(this.shadowRoot.querySelectorAll('[part="toolbar"] button')).filter(btn => {
+    return Array.from(this.shadowRoot.querySelectorAll('[part="toolbar"] button')).filter((btn) => {
       return btn.clientHeight > 0;
     });
   }
@@ -890,9 +997,9 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
   _toggleToolbarDisabled(disable) {
     const buttons = this._toolbarButtons;
     if (disable) {
-      buttons.forEach(btn => btn.setAttribute('disabled', 'true'));
+      buttons.forEach((btn) => btn.setAttribute('disabled', 'true'));
     } else {
-      buttons.forEach(btn => btn.removeAttribute('disabled'));
+      buttons.forEach((btn) => btn.removeAttribute('disabled'));
     }
   }
 
@@ -928,11 +1035,10 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
       reader.onload = (e) => {
         const image = e.target.result;
         const range = this._editor.getSelection(true);
-        this._editor.updateContents(new Quill.imports.delta()
-          .retain(range.index)
-          .delete(range.length)
-          .insert({image})
-        , SOURCE.USER);
+        this._editor.updateContents(
+          new Quill.imports.delta().retain(range.index).delete(range.length).insert({ image }),
+          SOURCE.USER
+        );
         this._markToolbarClicked();
         this._editor.setSelection(range.index + 1, SOURCE.SILENT);
         fileInput.value = '';
