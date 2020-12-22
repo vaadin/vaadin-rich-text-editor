@@ -29,6 +29,7 @@
   "scripts": {
     "debug": "web-test-runner test/*.test.js --watch",
     "screenshots": "hermione test/visual/test.js --update-refs",
+    "start": "web-dev-server --node-resolve --open",
     "test": "web-test-runner test/*.test.js --coverage",
     "test:sauce": "TEST_ENV=sauce npm test",
     "test:visual": "hermione test/visual/test.js"
@@ -49,6 +50,7 @@
     "@open-wc/testing-helpers": "^1.8.12",
     "@polymer/iron-component-page": "^4.0.0",
     "@polymer/iron-test-helpers": "^3.0.0",
+    "@web/dev-server": "^0.1.0",
     "@web/test-runner": "^0.11.0",
     "@web/test-runner-saucelabs": "^0.3.0",
     "hermione": "^3.9.0",
