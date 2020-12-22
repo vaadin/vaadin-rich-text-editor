@@ -3,8 +3,7 @@
 Copyright (c) 2018 Vaadin Ltd.
 This program is available under Apache License Version 2.0, available at https://vaadin.com/license/
 */
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { resetMouseCanceller } from '@polymer/polymer/lib/utils/gestures.js';
@@ -17,7 +16,6 @@ import '@vaadin/vaadin-license-checker/vaadin-license-checker.js';
 import '../vendor/vaadin-quill.js';
 import './vaadin-rich-text-editor-styles.js';
 import './vaadin-rich-text-editor-toolbar-styles.js';
-import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { useShadow } from '@polymer/polymer/lib/utils/settings.js';
 
 const Quill = window.Quill;
