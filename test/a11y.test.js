@@ -1,25 +1,10 @@
-<!doctype html>
-
-<head>
-  <meta charset="UTF-8">
-  <title>vaadin-rich-text-editor tests</title>
-  <script src="../../../wct-browser-legacy/browser.js"></script>
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-  <script type="module" src="../../../@polymer/test-fixture/test-fixture.js"></script>
-  <script src="../../../@polymer/iron-test-helpers/mock-interactions.js" type="module"></script>
-  <script type="module" src="../vaadin-rich-text-editor.js"></script>
-</head>
-
-<body>
-  <test-fixture id="default">
-    <template>
-      <vaadin-rich-text-editor></vaadin-rich-text-editor>
-    </template>
-  </test-fixture>
-
-  <script type="module">
-import '@polymer/test-fixture/test-fixture.js';
+import { expect } from '@esm-bundle/chai';
+import sinon from 'sinon';
+import { fixtureSync } from '@open-wc/testing-helpers';
+import { down, keyboardEventFor } from '@polymer/iron-test-helpers/mock-interactions.js';
+import { isFirefox } from './helpers.js';
 import '../vaadin-rich-text-editor.js';
+
 describe('accessibility', () => {
   'use strict';
 
@@ -32,7 +17,7 @@ describe('accessibility', () => {
   let rte, content, buttons, announcer, editor;
 
   beforeEach(() => {
-    rte = fixture('default');
+    rte = fixtureSync('<vaadin-rich-text-editor></vaadin-rich-text-editor>');
     editor = rte._editor;
     buttons = Array.from(rte.shadowRoot.querySelectorAll(`[part=toolbar] button`));
     content = rte.shadowRoot.querySelector('[contenteditable]');
@@ -40,7 +25,6 @@ describe('accessibility', () => {
   });
 
   describe('screen readers', () => {
-
     it('should have default titles for the buttons', () => {
       buttons.forEach((button, index) => {
         const expectedLabel = rte.i18n[Object.keys(rte.i18n)[index]];
@@ -52,7 +36,7 @@ describe('accessibility', () => {
       const defaultI18n = rte.i18n;
 
       const localized = {};
-      Object.keys(defaultI18n).forEach(key => localized[key] = defaultI18n[key] + ' localized');
+      Object.keys(defaultI18n).forEach((key) => (localized[key] = defaultI18n[key] + ' localized'));
       rte.i18n = localized;
 
       buttons.forEach((button, index) => {
@@ -81,7 +65,7 @@ describe('accessibility', () => {
       expect(announcer.textContent).to.equal('align left');
     });
 
-    it('should announce custom formatting', done => {
+    it('should announce custom formatting', (done) => {
       rte.value = '[{"insert": "foo "}, {"attributes": {"bold": true}, "insert": "bar"}, {"insert": "\\n"}]';
       editor.on('selection-change', () => {
         flushFormatAnnouncer();
@@ -94,27 +78,26 @@ describe('accessibility', () => {
   });
 
   describe('keyboard navigation', () => {
-
     it('should have only one tabbable button in toolbar', () => {
       const tabbables = rte.shadowRoot.querySelectorAll(`[part=toolbar] button:not([tabindex="-1"])`);
       expect(tabbables.length).to.equal(1);
       expect(tabbables[0]).to.eql(buttons[0]);
     });
 
-    it('should focus the next button on right-arrow', done => {
-      sinon.stub(buttons[0], 'focus', done);
-      const e = MockInteractions.keyboardEventFor('keydown', 39);
+    it('should focus the next button on right-arrow', (done) => {
+      sinon.stub(buttons[0], 'focus').callsFake(done);
+      const e = keyboardEventFor('keydown', 39);
       buttons[buttons.length - 1].dispatchEvent(e);
     });
 
-    it('should focus the previous button on left-arrow', done => {
-      sinon.stub(buttons[buttons.length - 1], 'focus', done);
-      const e = MockInteractions.keyboardEventFor('keydown', 37);
+    it('should focus the previous button on left-arrow', (done) => {
+      sinon.stub(buttons[buttons.length - 1], 'focus').callsFake(done);
+      const e = keyboardEventFor('keydown', 37);
       buttons[0].dispatchEvent(e);
     });
 
     it('should change the tabbable button on arrow navigation', () => {
-      const e = MockInteractions.keyboardEventFor('keydown', 39);
+      const e = keyboardEventFor('keydown', 39);
       buttons[0].dispatchEvent(e);
       expect(buttons[0].getAttribute('tabindex')).to.equal('-1');
       expect(buttons[1].getAttribute('tabindex')).not.to.be.ok;
@@ -122,57 +105,57 @@ describe('accessibility', () => {
 
     // This is a common pattern in popular rich text editors so users might expect
     // the combo to work. The toolbar is still accessible with the tab key normally.
-    it('should focus a toolbar button on meta-f10 combo', done => {
-      sinon.stub(buttons[0], 'focus', done);
+    it('should focus a toolbar button on meta-f10 combo', (done) => {
+      sinon.stub(buttons[0], 'focus').callsFake(done);
       editor.focus();
-      const e = MockInteractions.keyboardEventFor('keydown', 121, ['alt']);
+      const e = keyboardEventFor('keydown', 121, ['alt']);
       content.dispatchEvent(e);
     });
 
-    it('should focus a toolbar button on shift-tab combo', done => {
-      sinon.stub(buttons[0], 'focus', done);
+    it('should focus a toolbar button on shift-tab combo', (done) => {
+      sinon.stub(buttons[0], 'focus').callsFake(done);
       editor.focus();
-      const e = MockInteractions.keyboardEventFor('keydown', 9, ['shift']);
+      const e = keyboardEventFor('keydown', 9, ['shift']);
       content.dispatchEvent(e);
     });
 
-    it('should mark toolbar as focused before focusing it on shift-tab', done => {
+    it('should mark toolbar as focused before focusing it on shift-tab', (done) => {
       const spy = sinon.spy(rte, '_markToolbarFocused');
-      sinon.stub(buttons[0], 'focus', () => {
-        expect(spy).to.be.calledOnce;
+      sinon.stub(buttons[0], 'focus').callsFake(() => {
+        expect(spy.calledOnce).to.be.true;
         done();
       });
       editor.focus();
-      const e = MockInteractions.keyboardEventFor('keydown', 9, ['shift']);
+      const e = keyboardEventFor('keydown', 9, ['shift']);
       content.dispatchEvent(e);
     });
 
-    it('should prevent keydown and focus the editor on esc', done => {
-      sinon.stub(editor, 'focus', done);
-      const e = new CustomEvent('keydown', {bubbles: true});
+    it('should prevent keydown and focus the editor on esc', (done) => {
+      sinon.stub(editor, 'focus').callsFake(done);
+      const e = new CustomEvent('keydown', { bubbles: true });
       e.keyCode = 27;
       const result = buttons[0].dispatchEvent(e);
       expect(result).to.be.false; // dispatchEvent returns false when preventDefault is called
     });
 
-    it('should prevent keydown and focus the editor on tab', done => {
-      sinon.stub(editor, 'focus', done);
-      const e = new CustomEvent('keydown', {bubbles: true});
+    it('should prevent keydown and focus the editor on tab', (done) => {
+      sinon.stub(editor, 'focus').callsFake(done);
+      const e = new CustomEvent('keydown', { bubbles: true });
       e.keyCode = 9;
       e.shiftKey = false;
       const result = buttons[0].dispatchEvent(e);
       expect(result).to.be.false; // dispatchEvent returns false when preventDefault is called
     });
 
-    it('should preserve the text selection on shift-tab', done => {
-      sinon.stub(buttons[0], 'focus', () => {
-        expect(editor.getSelection()).to.deep.equal({index: 0, length: 2});
+    it('should preserve the text selection on shift-tab', (done) => {
+      sinon.stub(buttons[0], 'focus').callsFake(() => {
+        expect(editor.getSelection()).to.deep.equal({ index: 0, length: 2 });
         done();
       });
       rte.value = '[{"attributes":{"list":"bullet"},"insert":"Foo\\n"}]';
       editor.focus();
       editor.setSelection(0, 2);
-      const e = MockInteractions.keyboardEventFor('keydown', 9, ['shift']);
+      const e = keyboardEventFor('keydown', 9, ['shift']);
       content.dispatchEvent(e);
     });
 
@@ -180,45 +163,40 @@ describe('accessibility', () => {
       rte.value = '[{"insert":"  foo"},{"attributes":{"code-block":true},"insert":"\\n"}]';
       editor.focus();
       editor.setSelection(2, 0);
-      const e = MockInteractions.keyboardEventFor('keydown', 9, ['shift']);
+      const e = keyboardEventFor('keydown', 9, ['shift']);
       content.dispatchEvent(e);
       flushValueDebouncer();
       expect(rte.value).to.equal('[{"insert":"foo"},{"attributes":{"code-block":true},"insert":"\\n"}]');
       expect(e.defaultPrevented).to.be.true;
     });
 
-    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1 && !window.ShadyDOM) {
-      it('should focus the fake target on content focusin', done => {
-        const spy = sinon.spy(rte, '__createFakeFocusTarget');
-        sinon.stub(editor, 'focus', () => {
-          expect(spy).to.be.calledOnce;
-          const fake = spy.firstCall.returnValue;
-          const style = getComputedStyle(fake);
-          expect(style.position).to.equal('absolute');
-          expect(style.left).to.equal('-9999px');
-          expect(style.top).to.equal(document.documentElement.scrollTop + 'px');
-          done();
-        });
-        const e = new CustomEvent('focusin', {bubbles: true});
-        content.dispatchEvent(e);
+    (isFirefox ? it : it.skip)('should focus the fake target on content focusin', (done) => {
+      const spy = sinon.spy(rte, '__createFakeFocusTarget');
+      sinon.stub(editor, 'focus').callsFake(() => {
+        expect(spy.calledOnce).to.be.true;
+        const fake = spy.firstCall.returnValue;
+        const style = getComputedStyle(fake);
+        expect(style.position).to.equal('absolute');
+        expect(style.left).to.equal('-9999px');
+        expect(style.top).to.equal(document.documentElement.scrollTop + 'px');
+        done();
       });
+      const e = new CustomEvent('focusin', { bubbles: true });
+      content.dispatchEvent(e);
+    });
 
-      it('should focus the fake target on mousedown when content is not focused', done => {
-        const spy = sinon.spy(rte, '__createFakeFocusTarget');
-        sinon.stub(editor, 'focus', () => {
-          expect(spy).to.be.calledOnce;
-          const fake = spy.firstCall.returnValue;
-          const style = getComputedStyle(fake);
-          expect(style.position).to.equal('absolute');
-          expect(style.left).to.equal('-9999px');
-          expect(style.top).to.equal(document.documentElement.scrollTop + 'px');
-          done();
-        });
-        MockInteractions.down(content);
+    (isFirefox ? it : it.skip)('should focus the fake target on mousedown when content is not focused', (done) => {
+      const spy = sinon.spy(rte, '__createFakeFocusTarget');
+      sinon.stub(editor, 'focus').callsFake(() => {
+        expect(spy.calledOnce).to.be.true;
+        const fake = spy.firstCall.returnValue;
+        const style = getComputedStyle(fake);
+        expect(style.position).to.equal('absolute');
+        expect(style.left).to.equal('-9999px');
+        expect(style.top).to.equal(document.documentElement.scrollTop + 'px');
+        done();
       });
-    }
+      down(content);
+    });
   });
-
 });
-</script>
-</body>

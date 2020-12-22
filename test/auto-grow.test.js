@@ -1,46 +1,15 @@
-<!doctype html>
-
-<head>
-  <meta charset="UTF-8">
-  <title>vaadin-rich-text-editor tests</title>
-  <script src="../../../wct-browser-legacy/browser.js"></script>
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-  <script type="module" src="../../../@polymer/test-fixture/test-fixture.js"></script>
-  <script type="module" src="../vaadin-rich-text-editor.js"></script>
-</head>
-
-<body>
-  <test-fixture id="height">
-    <template>
-      <vaadin-rich-text-editor style='height:500px;'></vaadin-rich-text-editor>
-    </template>
-  </test-fixture>
-
-  <test-fixture id="min-height">
-    <template>
-      <vaadin-rich-text-editor style='min-height:500px;'></vaadin-rich-text-editor>
-    </template>
-  </test-fixture>
-
-  <test-fixture id="max-height">
-    <template>
-      <vaadin-rich-text-editor style='max-height:500px;'></vaadin-rich-text-editor>
-    </template>
-  </test-fixture>
-
-  <script type="module">
-import '@polymer/test-fixture/test-fixture.js';
+import { expect } from '@esm-bundle/chai';
+import { fixtureSync } from '@open-wc/testing-helpers';
 import '../vaadin-rich-text-editor.js';
-describe('rich text editor', () => {
-  'use strict';
 
+describe('rich text editor', () => {
   let rte, editorContainer, editorContentContainer, editorContent, content;
 
   // Saving clientHeight values of the elements in `elementsArray` to `savedConstrains` array
   let savedConstrains = [];
   const getAndSaveHeightConstrains = (elementsArray) => {
     savedConstrains = [];
-    elementsArray.forEach(element => savedConstrains.push(element.clientHeight));
+    elementsArray.forEach((element) => savedConstrains.push(element.clientHeight));
   };
 
   // Comparing updated height constrains of elements in `elementsArray` to the saved values with `condition`:
@@ -70,11 +39,9 @@ describe('rich text editor', () => {
 
   const conditionValues = ['equal', 'equal or greater than', 'below'];
   ['height', 'min-height', 'max-height'].forEach((definedValue, key) => {
-
     describe(`defined ${definedValue}`, () => {
-
       beforeEach(() => {
-        rte = fixture(definedValue);
+        rte = fixtureSync(`<vaadin-rich-text-editor style="${definedValue}: 500px"></vaadin-rich-text-editor>`);
         editorContainer = rte.shadowRoot.querySelector('.vaadin-rich-text-editor-container');
         editorContentContainer = rte.shadowRoot.querySelector('.ql-container');
         editorContent = rte.shadowRoot.querySelector('.ql-editor');
@@ -82,7 +49,7 @@ describe('rich text editor', () => {
         content = `[{"insert":"\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n"}]`;
       });
 
-      it('rte\'s height should be ' + conditionValues[key] + ' the ' + definedValue, () => {
+      it('rich text editor height should be ' + conditionValues[key] + ' the ' + definedValue, () => {
         // Includes borders and indents
         compareValue(rte.offsetHeight, 500, key);
       });
@@ -91,30 +58,29 @@ describe('rich text editor', () => {
         expect(rte.clientHeight).to.be.equal(editorContainer.clientHeight);
       });
 
-      it('content container\'s and content\'s height should equal flex wrapper\'s height without toolbar\'s height', () => {
+      it("content container's and content's height should equal flex wrapper's height without toolbar's height", () => {
         const toolbarHeight = rte.shadowRoot.querySelector('[part="toolbar"]').offsetHeight;
-        // We should consider indents on editor content container for the substraction of the toolbar height
+        // We should consider indents on editor content container for the subtraction of the toolbar height
         expect(editorContainer.clientHeight - toolbarHeight).to.be.equal(editorContentContainer.offsetHeight);
         expect(editorContentContainer.clientHeight).to.be.equal(editorContent.clientHeight);
       });
 
-      it('all height constrains should be ' + conditionValues[key] +
-        ((key === 2) ? ' the ' + definedValue + ' and greater than ' : ' ') +
-        ' the previous values after the content was inserted', () => {
-
-        const elementsArray = [rte, editorContainer, editorContentContainer, editorContent];
-        getAndSaveHeightConstrains(elementsArray);
-        rte.value = content;
-        // If the max-height is defined rte's height should equal max-height after inserting the content.
-        if (key === 2) {
-          compareValue(rte.offsetHeight, 500, 0);
+      it(
+        'all height constrains should be ' +
+          conditionValues[key] +
+          (key === 2 ? ' the ' + definedValue + ' and greater than ' : ' ') +
+          ' the previous values after the content was inserted',
+        () => {
+          const elementsArray = [rte, editorContainer, editorContentContainer, editorContent];
+          getAndSaveHeightConstrains(elementsArray);
+          rte.value = content;
+          // If the max-height is defined RTE height should equal max-height after inserting the content.
+          if (key === 2) {
+            compareValue(rte.offsetHeight, 500, 0);
+          }
+          getAndCompareHeightConstrains(elementsArray, key);
         }
-        getAndCompareHeightConstrains(elementsArray, key);
-      });
-
+      );
     });
-
   });
 });
-</script>
-</body>

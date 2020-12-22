@@ -1,32 +1,9 @@
-<!doctype html>
-
-<head>
-  <meta charset="UTF-8">
-  <title>vaadin-rich-text-editor tests</title>
-  <script src="../../../wct-browser-legacy/browser.js"></script>
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-  <script src="./common.js"></script>
-  <script type="module" src="../../../@polymer/test-fixture/test-fixture.js"></script>
-  <script type="module" src="../vaadin-rich-text-editor.js"></script>
-</head>
-
-<body>
-  <test-fixture id="default">
-    <template>
-      <vaadin-rich-text-editor></vaadin-rich-text-editor>
-    </template>
-  </test-fixture>
-
-  <test-fixture id="with-value">
-    <template>
-      <vaadin-rich-text-editor value='[{"insert": "Go Vaadin"}]'></vaadin-rich-text-editor>
-    </template>
-  </test-fixture>
-
-  <script type="module">
-import '@polymer/test-fixture/test-fixture.js';
+import { expect } from '@esm-bundle/chai';
+import sinon from 'sinon';
+import { fixtureSync } from '@open-wc/testing-helpers';
+import { createImage, isDesktopSafari, nextRender } from './helpers.js';
 import '../vaadin-rich-text-editor.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
+
 describe('rich text editor', () => {
   'use strict';
 
@@ -34,18 +11,14 @@ describe('rich text editor', () => {
 
   let rte, editor;
 
-  const getButton = fmt => rte.shadowRoot.querySelector(`[part~="toolbar-button-${fmt}"]`);
+  const getButton = (fmt) => rte.shadowRoot.querySelector(`[part~="toolbar-button-${fmt}"]`);
 
   beforeEach(() => {
-    rte = fixture('default');
+    rte = fixtureSync('<vaadin-rich-text-editor></vaadin-rich-text-editor>');
     editor = rte._editor;
   });
 
   describe('custom element definition', () => {
-    it('should have proper tag name', () => {
-      expect(rte.localName).to.be.equal('vaadin-rich-text-editor');
-    });
-
     it('should not expose class name globally', () => {
       expect(window.RichTextEditorElement).not.to.be.ok;
     });
@@ -59,27 +32,27 @@ describe('rich text editor', () => {
     let btn;
 
     describe('selected text', () => {
-      beforeEach(done => {
+      beforeEach(async () => {
         editor.focus();
         editor.insertText(0, 'Foo', 'user');
         editor.setSelection(0, 3);
-        afterNextRender(rte, done);
+        await nextRender(rte);
       });
 
-      ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'].forEach(fmt => {
+      ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'].forEach((fmt) => {
         it(`should apply ${fmt} formatting to the selected text on click`, () => {
           btn = getButton(fmt);
-          btn.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
-          editor.root.dispatchEvent(new CustomEvent('focusout', {bubbles: true}));
+          btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+          editor.root.dispatchEvent(new CustomEvent('focusout', { bubbles: true }));
           document.body.focus();
-          btn.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+          btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
           btn.click();
           expect(editor.getFormat(0, 3)[fmt]).to.be.true;
         });
       });
     });
 
-    ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'].forEach(fmt => {
+    ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'].forEach((fmt) => {
       it(`should apply ${fmt} formatting when clicking the "toolbar-button-${fmt}" part`, () => {
         btn = getButton(fmt);
         btn.click();
@@ -91,11 +64,11 @@ describe('rich text editor', () => {
         btn = getButton(fmt);
         editor.format(fmt, true);
         btn.click();
-        expect(editor.getFormat(0)).to.be.empty.object;
+        expect(editor.getFormat(0)).to.deep.equal({});
       });
     });
 
-    ['sub', 'super'].forEach(scr => {
+    ['sub', 'super'].forEach((scr) => {
       it(`should apply ${scr}script when clicking the "toolbar-button-${scr}script" part`, () => {
         btn = getButton(`${scr}script`);
         btn.click();
@@ -107,11 +80,11 @@ describe('rich text editor', () => {
         btn = getButton(`${scr}script`);
         editor.format('script', scr);
         btn.click();
-        expect(editor.getFormat(0)).to.be.empty.object;
+        expect(editor.getFormat(0)).to.deep.equal({});
       });
     });
 
-    ['ordered', 'bullet'].forEach(type => {
+    ['ordered', 'bullet'].forEach((type) => {
       it(`should create ${type} list when clicking the "toolbar-button-list-${type}" part`, () => {
         btn = getButton(`list-${type}`);
 
@@ -119,11 +92,11 @@ describe('rich text editor', () => {
         expect(editor.getFormat(0).list).to.be.equal(type);
 
         btn.click();
-        expect(editor.getFormat(0).list).to.be.empty;
+        expect(editor.getFormat(0).list).to.be.not.ok;
       });
     });
 
-    [1, 2].forEach(level => {
+    [1, 2].forEach((level) => {
       it(`should create <h${level}> header when clicking the "toolbar-button-h${level}" part`, () => {
         btn = getButton(`h${level}`);
 
@@ -131,11 +104,11 @@ describe('rich text editor', () => {
         expect(editor.getFormat(0).header).to.be.equal(level);
 
         btn.click();
-        expect(editor.getFormat(0).header).to.be.empty;
+        expect(editor.getFormat(0).header).to.be.not.ok;
       });
     });
 
-    ['center', 'right'].forEach(align => {
+    ['center', 'right'].forEach((align) => {
       it(`should apply ${align} alignment when clicking the "toolbar-button-align-${align}" part`, () => {
         btn = getButton(`align-${align}`);
 
@@ -144,7 +117,7 @@ describe('rich text editor', () => {
 
         btn = getButton('align-left');
         btn.click();
-        expect(editor.getFormat(0).align).to.be.empty;
+        expect(editor.getFormat(0).align).to.be.not.ok;
       });
     });
 
@@ -153,7 +126,7 @@ describe('rich text editor', () => {
 
       after(() => rte.removeAttribute('dir'));
 
-      ['center', 'left'].forEach(align => {
+      ['center', 'left'].forEach((align) => {
         it(`should apply ${align} alignment when clicking the "toolbar-button-align-${align}" part in RTL`, () => {
           btn = getButton(`align-${align}`);
 
@@ -162,7 +135,7 @@ describe('rich text editor', () => {
 
           btn = getButton('align-right');
           btn.click();
-          expect(editor.getFormat(0).align).to.be.empty;
+          expect(editor.getFormat(0).align).to.be.not.ok;
         });
       });
     });
@@ -173,7 +146,7 @@ describe('rich text editor', () => {
 
       btn = getButton('clean');
       btn.click();
-      expect(editor.getFormat(0)).to.be.empty.object;
+      expect(editor.getFormat(0)).to.deep.equal({});
     });
 
     describe('on state attribute', () => {
@@ -188,9 +161,9 @@ describe('rich text editor', () => {
 
       it('should toggle "on" attribute for corresponding buttons when selection is changed', () => {
         const delta = new window.Quill.imports.delta([
-          {'attributes': {'bold': true}, 'insert': 'Foo\n'},
-          {'attributes': {'italic': true}, 'insert': 'Bar\n'},
-          {'attributes': {'link': 'https://vaadin.com'}, 'insert': 'Vaadin\n'}
+          { attributes: { bold: true }, insert: 'Foo\n' },
+          { attributes: { italic: true }, insert: 'Bar\n' },
+          { attributes: { link: 'https://vaadin.com' }, insert: 'Vaadin\n' }
         ]);
         editor.setContents(delta, 'user');
 
@@ -227,17 +200,17 @@ describe('rich text editor', () => {
         // on the hidden file input when user clicks "Image" button. The
         // file dialog is actually not getting opened during testing.
         const clickSpy = sinon.spy();
-        sinon.stub(rte.$.fileInput, 'click', clickSpy);
+        sinon.stub(rte.$.fileInput, 'click').callsFake(clickSpy);
         btn.dispatchEvent(new MouseEvent('click'));
-        expect(clickSpy).to.be.calledOnce;
+        expect(clickSpy.calledOnce).to.be.true;
       });
 
       it('should open file dialog by touchend on the "image-button" part', () => {
         const clickSpy = sinon.spy();
-        sinon.stub(rte.$.fileInput, 'click', clickSpy);
-        const e = new CustomEvent('touchend', {cancelable: true});
+        sinon.stub(rte.$.fileInput, 'click').callsFake(clickSpy);
+        const e = new CustomEvent('touchend', { cancelable: true });
         btn.dispatchEvent(e);
-        expect(clickSpy).to.be.calledOnce;
+        expect(clickSpy.calledOnce).to.be.true;
         expect(e.defaultPrevented).to.be.true;
       });
 
@@ -246,43 +219,38 @@ describe('rich text editor', () => {
         // Polymer.Gestures.resetMouseCanceller. Have to use a separate
         // wrapper method for testing.
         const spy = sinon.spy(rte, '__resetMouseCanceller');
-        // prevent IE11 and Edge from opening the file dialog
-        sinon.stub(rte.$.fileInput, 'click', () => {});
-        btn.dispatchEvent(new CustomEvent('touchend', {cancelable: true}));
-        expect(spy).to.be.calledOnce;
+        btn.dispatchEvent(new CustomEvent('touchend', { cancelable: true }));
+        expect(spy.calledOnce).to.be.true;
       });
 
-      const isDesktopSafari = (() => {
-        const uA = navigator.userAgent;
-        const vendor = navigator.vendor;
-        return /Safari/i.test(uA) && /Apple Computer/.test(vendor) && !/Mobi|Android/i.test(uA);
-      })();
+      (isDesktopSafari ? it.skip : it)(
+        'should insert image from the file dialog on file input change event',
+        (done) => {
+          // We can't simply assign `files` property of input[type="file"].
+          // Tweaking __proto__ to make it assignable below.
+          const fileInput = rte.shadowRoot.querySelector('input[type="file"]');
+          fileInput.__proto__ = HTMLElement.prototype;
+          // Replacing __proto__ is not enough for Android Chrome, deleting the
+          // files property in addition.
+          delete fileInput.files;
 
-      !isDesktopSafari && it('should insert image from the file dialog on file input change event', done => {
-        // We can't simply assign `files` property of input[type="file"].
-        // Tweaking __proto__ to make it assignable below.
-        const fileInput = rte.shadowRoot.querySelector('input[type="file"]');
-        fileInput.__proto__ = HTMLElement.prototype;
-        // Replacing __proto__ is not enough for Android Chrome, deleting the
-        // files property in addition.
-        delete fileInput.files;
+          editor.focus();
 
-        editor.focus();
+          const img = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+          fileInput.files = [createImage(img, 'image/gif')];
 
-        const img = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
-        fileInput.files = [createImage(img, 'image/gif')];
+          rte.addEventListener('value-changed', () => {
+            const operation = JSON.parse(rte.value)[0];
+            expect(operation.insert.image).to.equal(img);
+            done();
+          });
 
-        rte.addEventListener('value-changed', () => {
-          const operation = JSON.parse(rte.value)[0];
-          expect(operation.insert.image).to.equal(img);
-          done();
-        });
+          // trigger mock image upload
+          fileInput.dispatchEvent(new Event('change'));
+        }
+      );
 
-        // trigger mock image upload
-        fileInput.dispatchEvent(new Event('change'));
-      });
-
-      !isDesktopSafari && it('should mark image button as clicked for subsequent change event', done => {
+      (isDesktopSafari ? it.skip : it)('should mark image button as clicked for subsequent change event', (done) => {
         const markClickedSpy = sinon.spy(rte, '_markToolbarClicked');
 
         const fileInput = rte.shadowRoot.querySelector('input[type="file"]');
@@ -295,7 +263,7 @@ describe('rich text editor', () => {
         fileInput.files = [createImage(img, 'image/gif')];
 
         rte.addEventListener('value-changed', () => {
-          expect(markClickedSpy).to.be.calledOnce;
+          expect(markClickedSpy.calledOnce).to.be.true;
           done();
         });
 
@@ -319,14 +287,12 @@ describe('rich text editor', () => {
           expect(dialog.opened).to.be.false;
         });
 
-        it('should focus whe text field when the dialog is opened', done => {
+        it('should focus whe text field when the dialog is opened', async () => {
           const spy = sinon.spy(rte.$.linkUrl, 'focus');
           editor.focus();
           btn.click();
-          afterNextRender(rte, () => {
-            expect(spy).to.be.calledOnce;
-            done();
-          });
+          await nextRender(rte);
+          expect(spy.calledOnce).to.be.true;
         });
 
         it('should confirm the dialog by pressing enter in the focused text field', () => {
@@ -336,7 +302,7 @@ describe('rich text editor', () => {
           const evt = new CustomEvent('keydown');
           evt.keyCode = 13;
           rte.$.linkUrl.dispatchEvent(evt);
-          expect(spy).to.be.calledOnce;
+          expect(spy.calledOnce).to.be.true;
         });
 
         it('should focus whe editor when the dialog is cancelled', () => {
@@ -347,13 +313,13 @@ describe('rich text editor', () => {
           rte.addEventListener('change', spy);
 
           rte.$.cancelLink.click();
-          expect(spy).to.be.calledOnce;
+          expect(spy.calledOnce).to.be.true;
         });
       });
 
       describe('selected text', () => {
         it('should open the confirm dialog when the editor has focus and text is selected', () => {
-          rte.value = JSON.stringify([{insert: 'Vaadin'}]);
+          rte.value = JSON.stringify([{ insert: 'Vaadin' }]);
           editor.focus();
           editor.setSelection(0, 6);
           btn.click();
@@ -361,7 +327,7 @@ describe('rich text editor', () => {
         });
 
         it('should add link to the selected text when URL in dialog is set and confirmed', () => {
-          rte.value = JSON.stringify([{insert: 'Vaadin'}]);
+          rte.value = JSON.stringify([{ insert: 'Vaadin' }]);
           editor.focus();
           editor.setSelection(0, 6);
           flushValueDebouncer();
@@ -439,7 +405,7 @@ describe('rich text editor', () => {
 
       describe('change', () => {
         it('should dispatch change event if the value has been updated', () => {
-          rte.value = JSON.stringify([{insert: 'Vaadin'}]);
+          rte.value = JSON.stringify([{ insert: 'Vaadin' }]);
           editor.focus();
           editor.setSelection(0, 6);
           flushValueDebouncer();
@@ -451,7 +417,7 @@ describe('rich text editor', () => {
 
           rte.$.confirmLink.click();
           flushValueDebouncer();
-          expect(spy).to.be.calledOnce;
+          expect(spy.calledOnce).to.be.true;
         });
 
         it('should not change value and not dispatch change if the dialog was cancelled', () => {
@@ -468,7 +434,7 @@ describe('rich text editor', () => {
           rte.$.cancelLink.click();
           flushValueDebouncer();
           expect(rte.value).to.equal(value);
-          expect(spy).to.not.be.called;
+          expect(spy.called).to.be.false;
         });
       });
     });
@@ -477,8 +443,8 @@ describe('rich text editor', () => {
   describe('change event', () => {
     var content;
 
-    const setContent = text => {
-      editor.setContents(new window.Quill.imports.delta([{insert: text}]), 'user');
+    const setContent = (text) => {
+      editor.setContents(new window.Quill.imports.delta([{ insert: text }]), 'user');
     };
 
     beforeEach(() => {
@@ -497,23 +463,23 @@ describe('rich text editor', () => {
       content.blur();
       content.dispatchEvent(new CustomEvent('focusout'));
 
-      expect(spy).to.be.calledOnce;
+      expect(spy.calledOnce).to.be.true;
     });
 
     it('should not dispatch change event on focusout when value set from outside', () => {
       const spy = sinon.spy();
       rte.addEventListener('change', spy);
 
-      rte.value = JSON.stringify([{insert: 'Foo\n'}]);
+      rte.value = JSON.stringify([{ insert: 'Foo\n' }]);
       editor.focus();
       content.blur();
       content.dispatchEvent(new CustomEvent('focusout'));
 
-      expect(spy).to.not.be.called;
+      expect(spy.called).to.be.false;
     });
 
-    it('should dispatch change event after styling the content with toolbar', done => {
-      rte.value = JSON.stringify([{insert: 'Foo'}]);
+    it('should dispatch change event after styling the content with toolbar', (done) => {
+      rte.value = JSON.stringify([{ insert: 'Foo' }]);
 
       rte.addEventListener('change', () => {
         expect(rte.value).to.equal('[{"attributes":{"bold":true},"insert":"Foo"},{"insert":"\\n"}]');
@@ -525,7 +491,7 @@ describe('rich text editor', () => {
       editor.setSelection(0, 3);
 
       const btn = getButton('bold');
-      btn.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+      btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
       const evt = new CustomEvent('focusout');
       evt.relatedTarget = btn;
       content.blur();
@@ -538,27 +504,27 @@ describe('rich text editor', () => {
     it('should not dispatch change event if no styling changed after toolbar click', () => {
       const spy = sinon.spy();
       rte.addEventListener('change', spy);
-      rte.value = JSON.stringify([{insert: 'Foo'}]);
+      rte.value = JSON.stringify([{ insert: 'Foo' }]);
 
       // Emulate using the toolbar: clicking a bold button with no text selected
       editor.focus();
       editor.setSelection(0, 0);
 
       const btn = getButton('bold');
-      btn.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+      btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
       btn.click();
       content.dispatchEvent(new CustomEvent('focus'));
       flushValueDebouncer();
 
-      expect(spy).to.not.be.called;
+      expect(spy.called).to.be.false;
     });
 
-    it('should dispatch change event after clearing the formatting with toolbar', done => {
-      const text = JSON.stringify([{attributes: {bold: true}, insert: 'Foo\n'}]);
+    it('should dispatch change event after clearing the formatting with toolbar', (done) => {
+      const text = JSON.stringify([{ attributes: { bold: true }, insert: 'Foo\n' }]);
       rte.value = text;
 
       rte.addEventListener('change', () => {
-        expect(rte.value).to.equal(JSON.stringify([{insert: 'Foo\n'}]));
+        expect(rte.value).to.equal(JSON.stringify([{ insert: 'Foo\n' }]));
         done();
       });
 
@@ -566,7 +532,7 @@ describe('rich text editor', () => {
       editor.focus();
       editor.setSelection(0, 3);
       const btn = getButton('clean');
-      btn.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+      btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
       btn.click();
       flushValueDebouncer();
     });
@@ -575,22 +541,22 @@ describe('rich text editor', () => {
       const spy = sinon.spy();
       rte.addEventListener('change', spy);
 
-      rte.value = JSON.stringify([{insert: 'Foo\n'}]);
+      rte.value = JSON.stringify([{ insert: 'Foo\n' }]);
       editor.focus();
 
       // Emulate adding the formatting, removing it back and then moving focus out
       editor.setSelection(0, 3);
       const btn = getButton('bold');
-      btn.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+      btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
       btn.click();
 
-      btn.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+      btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
       btn.click();
 
       content.blur();
       content.dispatchEvent(new CustomEvent('focusout'));
 
-      expect(spy).to.not.be.called;
+      expect(spy.called).to.be.false;
     });
   });
 
@@ -618,26 +584,26 @@ describe('rich text editor', () => {
       expect(rte.value).to.be.equal('');
     });
 
-    it('should represent the stringified "delta" of the editor', done => {
-      rte.addEventListener('value-changed', e => {
+    it('should represent the stringified "delta" of the editor', (done) => {
+      rte.addEventListener('value-changed', (e) => {
         expect(e.detail.value).to.be.string;
         const parsedValue = JSON.parse(e.detail.value);
         expect(parsedValue).to.have.length(1);
-        expect(parsedValue).to.deep.equal([{insert: 'Foo\n'}]);
+        expect(parsedValue).to.deep.equal([{ insert: 'Foo\n' }]);
         done();
       });
       editor.insertText(0, 'Foo', 'user');
     });
 
     it('should update the "delta" when set from outside', () => {
-      rte.value = JSON.stringify([{insert: 'Foo'}]);
+      rte.value = JSON.stringify([{ insert: 'Foo' }]);
       expect(editor.getText()).to.equal('Foo\n');
     });
 
     it('should error when setting value of the incorrect type', () => {
       const origError = console.error;
-      const spy = console.error = sinon.spy();
-      rte.value = [{insert: 'Foo'}];
+      const spy = (console.error = sinon.spy());
+      rte.value = [{ insert: 'Foo' }];
       console.error = origError;
       expect(editor.getText()).to.not.include('Foo');
       expect(spy.called).to.be.true;
@@ -647,7 +613,7 @@ describe('rich text editor', () => {
       // Set value for falling back
       rte.value = '[{"insert":"Foo"}]';
       const origError = console.error;
-      const spy = console.error = sinon.spy();
+      const spy = (console.error = sinon.spy());
       // Missing closing ]
       rte.value = `[{insert: 'Bar'}`;
       console.error = origError;
@@ -660,7 +626,7 @@ describe('rich text editor', () => {
       // Set value for falling back
       rte.value = '[{"insert":"Foo"}]';
       const origError = console.error;
-      const spy = console.error = sinon.spy();
+      const spy = (console.error = sinon.spy());
       rte.value = `1`;
       console.error = origError;
       expect(editor.getText()).to.not.include('1');
@@ -688,30 +654,24 @@ describe('rich text editor', () => {
       rte.value = '';
       expect(editor.getText()).to.equal('\n');
     });
-
-    it('should correctly parse value from attribute', () => {
-      rte = fixture('with-value');
-      editor = rte._editor;
-      expect(editor.getText()).to.equal('Go Vaadin\n');
-    });
   });
 
   describe('htmlValue', () => {
     let el;
 
     function setValueAndFormatLine(format, value = true) {
-      rte.value = JSON.stringify([{insert: 'Foo'}]);
+      rte.value = JSON.stringify([{ insert: 'Foo' }]);
       editor.formatLine(0, 1, format, value);
       flushValueDebouncer();
     }
 
     function setValueAndFormatText(format, value = true) {
-      rte.value = JSON.stringify([{insert: 'Foo'}]);
+      rte.value = JSON.stringify([{ insert: 'Foo' }]);
       editor.formatText(0, 3, format, value);
       flushValueDebouncer();
     }
 
-    const getHtml = htmlValue => {
+    const getHtml = (htmlValue) => {
       const div = document.createElement('div');
       div.innerHTML = rte.htmlValue;
       return div.firstChild;
@@ -720,7 +680,8 @@ describe('rich text editor', () => {
     it('should update htmlValue and value on dangerously setting of the editor htmlValue', () => {
       rte.dangerouslySetHtmlValue('<h3><i>Foo</i>Bar</h3>');
       flushValueDebouncer();
-      const delta = '[{"attributes":{"italic":true},"insert":"Foo"},{"insert":"Bar"},{"attributes":{"header":3},"insert":"\\n"}]';
+      const delta =
+        '[{"attributes":{"italic":true},"insert":"Foo"},{"insert":"Bar"},{"attributes":{"header":3},"insert":"\\n"}]';
       expect(rte.value).to.equal(delta);
       // Quill is converting the italic font to use appropriate tag
       expect(rte.htmlValue).to.equal('<h3><em>Foo</em>Bar</h3>');
@@ -737,7 +698,7 @@ describe('rich text editor', () => {
     });
 
     it('should be updated on value property change', () => {
-      rte.value = JSON.stringify([{insert: 'Foo'}]);
+      rte.value = JSON.stringify([{ insert: 'Foo' }]);
       expect(rte.htmlValue).to.be.eql('<p>Foo</p>');
     });
 
@@ -747,7 +708,7 @@ describe('rich text editor', () => {
     });
 
     it('should use <p> tag to wrap inline text', () => {
-      rte.value = JSON.stringify([{insert: 'Foo'}]);
+      rte.value = JSON.stringify([{ insert: 'Foo' }]);
       el = getHtml(rte.htmlValue);
       expect(el.localName).to.equal('p');
       expect(el.className).to.equal('');
@@ -829,8 +790,8 @@ describe('rich text editor', () => {
     });
 
     it('should use inline styles for text alignment', () => {
-      ['rtl', 'ltr'].forEach(dir => {
-        ['center', dir === 'rtl' ? 'left' : 'right'].forEach(align => {
+      ['rtl', 'ltr'].forEach((dir) => {
+        ['center', dir === 'rtl' ? 'left' : 'right'].forEach((align) => {
           rte.setAttribute('dir', dir);
           setValueAndFormatLine('align', align);
           el = getHtml(rte.htmlValue);
@@ -854,10 +815,10 @@ describe('rich text editor', () => {
     it('should invoke the editor methods', () => {
       const spy = sinon.spy(editor, 'enable');
       rte.disabled = true;
-      expect(spy).to.be.calledOnce;
+      expect(spy.calledOnce).to.be.true;
       expect(spy.firstCall.args[0]).to.equal(false);
       rte.disabled = false;
-      expect(spy).to.be.calledTwice;
+      expect(spy.calledTwice).to.be.true;
       expect(spy.secondCall.args).to.have.length(0);
     });
 
@@ -869,9 +830,9 @@ describe('rich text editor', () => {
     it('should disable the toolbar buttons', () => {
       const buttons = Array.from(rte.shadowRoot.querySelectorAll('[part~="toolbar-button"]'));
       rte.disabled = true;
-      expect(buttons.every(btn => btn.hasAttribute('disabled'))).to.be.true;
+      expect(buttons.every((btn) => btn.hasAttribute('disabled'))).to.be.true;
       rte.disabled = false;
-      expect(buttons.every(btn => btn.hasAttribute('disabled'))).to.be.false;
+      expect(buttons.every((btn) => btn.hasAttribute('disabled'))).to.be.false;
     });
   });
 
@@ -889,7 +850,8 @@ describe('rich text editor', () => {
       rte.readonly = true;
       rte.dangerouslySetHtmlValue('<h3><i>Foo</i>Bar</h3>');
       flushValueDebouncer();
-      const delta = '[{"attributes":{"italic":true},"insert":"Foo"},{"insert":"Bar"},{"attributes":{"header":3},"insert":"\\n"}]';
+      const delta =
+        '[{"attributes":{"italic":true},"insert":"Foo"},{"insert":"Bar"},{"attributes":{"header":3},"insert":"\\n"}]';
       expect(rte.value).to.equal(delta);
       // Quill is converting the italic font to use appropriate tag
       expect(rte.htmlValue).to.equal('<h3><em>Foo</em>Bar</h3>');
@@ -898,10 +860,10 @@ describe('rich text editor', () => {
     it('should invoke the editor methods', () => {
       const spy = sinon.spy(editor, 'enable');
       rte.readonly = true;
-      expect(spy).to.be.calledOnce;
+      expect(spy.calledOnce).to.be.true;
       expect(spy.firstCall.args[0]).to.equal(false);
       rte.readonly = false;
-      expect(spy).to.be.calledTwice;
+      expect(spy.calledTwice).to.be.true;
       expect(spy.secondCall.args).to.have.length(0);
     });
 
@@ -933,33 +895,34 @@ describe('rich text editor', () => {
 
   describe('shadow selection polyfill', () => {
     it('should return correct selection when `quill.format` is called', () => {
-      rte.value = JSON.stringify([{insert: 'Foo'}]);
+      rte.value = JSON.stringify([{ insert: 'Foo' }]);
       editor.setSelection(0, 3);
       editor.format('bold', true);
       expect(editor.getSelection().length).to.equal(3);
     });
 
-    it('should not throw when insertins newline in the list', () => {
+    it('should not throw when inserting newline in the list', () => {
       rte.value = JSON.stringify([
-        {insert: '12'}, {attributes: {list: 'bullet'}, insert: '\n'},
-        {insert: '34'}, {attributes: {list: 'bullet'}, insert: '\n'}
+        { insert: '12' },
+        { attributes: { list: 'bullet' }, insert: '\n' },
+        { insert: '34' },
+        { attributes: { list: 'bullet' }, insert: '\n' }
       ]);
       editor.focus();
       editor.setSelection(4, 0);
-      editor.insertText(4, '\n', {list: 'bullet'}, 'user');
+      editor.insertText(4, '\n', { list: 'bullet' }, 'user');
       flushValueDebouncer();
 
       expect(rte.value).to.equal(
         JSON.stringify([
-          {insert: '12'},
-          {attributes: {list: 'bullet'}, insert: '\n'},
-          {insert: '3'},
-          {attributes: {list: 'bullet'}, insert: '\n'},
-          {insert: '4'},
-          {attributes: {list: 'bullet'}, insert: '\n'}
-        ]));
+          { insert: '12' },
+          { attributes: { list: 'bullet' }, insert: '\n' },
+          { insert: '3' },
+          { attributes: { list: 'bullet' }, insert: '\n' },
+          { insert: '4' },
+          { attributes: { list: 'bullet' }, insert: '\n' }
+        ])
+      );
     });
   });
 });
-</script>
-</body>
