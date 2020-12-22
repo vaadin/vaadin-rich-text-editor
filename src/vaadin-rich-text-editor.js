@@ -16,7 +16,6 @@ import '@vaadin/vaadin-license-checker/vaadin-license-checker.js';
 import '../vendor/vaadin-quill.js';
 import './vaadin-rich-text-editor-styles.js';
 import './vaadin-rich-text-editor-toolbar-styles.js';
-import { useShadow } from '@polymer/polymer/lib/utils/settings.js';
 
 const Quill = window.Quill;
 
@@ -479,7 +478,7 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
     this.__patchKeyboard();
 
     /* istanbul ignore if */
-    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1 && useShadow) {
+    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
       this.__patchFirefoxFocus();
     }
 
