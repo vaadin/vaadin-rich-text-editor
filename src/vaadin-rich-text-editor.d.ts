@@ -2,6 +2,8 @@ import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mix
 
 import { ElementMixin } from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
 
+import { RichTextEditorI18n } from './interfaces';
+
 /**
  * `<vaadin-rich-text-editor>` is a Web Component for rich text editing.
  * It provides a set of toolbar controls to apply formatting on the content,
@@ -123,5 +125,3 @@ declare global {
 }
 
 export { RichTextEditorElement };
-
-import { RichTextEditorI18n } from '../@types/interfaces';
