@@ -713,9 +713,9 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
 
   /** @private */
   __patchFirefoxFocus() {
-    // in Firefox 63 with native Shadow DOM, when moving focus out of
+    // in Firefox 63+ with native Shadow DOM, when moving focus out of
     // contenteditable and back again within same shadow root, cursor
-    // disappears. See https://jsfiddle.net/webpadawan/g6vku9L3/
+    // disappears. See https://bugzilla.mozilla.org/show_bug.cgi?id=1496769
     const editorContent = this.shadowRoot.querySelector('.ql-editor');
     let isFake = false;
 
