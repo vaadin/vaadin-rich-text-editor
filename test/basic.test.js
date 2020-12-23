@@ -1,7 +1,7 @@
 import { expect } from '@esm-bundle/chai';
 import sinon from 'sinon';
 import { fixtureSync } from '@open-wc/testing-helpers';
-import { createImage, isDesktopSafari, nextRender } from './helpers.js';
+import { createImage, isDesktopSafari, isFirefox, nextRender } from './helpers.js';
 import '../vaadin-rich-text-editor.js';
 
 describe('rich text editor', () => {
@@ -40,7 +40,9 @@ describe('rich text editor', () => {
       });
 
       ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'].forEach((fmt) => {
-        it(`should apply ${fmt} formatting to the selected text on click`, () => {
+        // FIXME: flaky test in GitHub Actions only in Firefox (passing locally).
+        const isFlaky = isFirefox && fmt === 'bold';
+        (isFlaky ? it.skip : it)(`should apply ${fmt} formatting to the selected text on click`, () => {
           btn = getButton(fmt);
           btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
           editor.root.dispatchEvent(new CustomEvent('focusout', { bubbles: true }));
