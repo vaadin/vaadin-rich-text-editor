@@ -67,6 +67,10 @@ import { RichTextEditorEventMap, RichTextEditorI18n } from './interfaces';
  * `toolbar-button-clean`               | The "clean formatting" button
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
+ *
+ * @fires {Event} change - Fired when the user commits a value change.
+ * @fires {CustomEvent} html-value-changed - Fired when the `htmlValue` property changes.
+ * @fires {CustomEvent} value-changed - Fired when the `value` property changes.
  */
 declare class RichTextEditorElement extends ElementMixin(ThemableMixin(HTMLElement)) {
   /**

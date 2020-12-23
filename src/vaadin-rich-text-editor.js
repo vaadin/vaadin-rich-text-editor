@@ -110,6 +110,10 @@ const TAB_KEY = 9;
  *
  * See [ThemableMixin – how to apply styles for shadow parts](https://github.com/vaadin/vaadin-themable-mixin/wiki)
  *
+ * @fires {Event} change - Fired when the user commits a value change.
+ * @fires {CustomEvent} html-value-changed - Fired when the `htmlValue` property changes.
+ * @fires {CustomEvent} value-changed - Fired when the `value` property changes.
+ *
  * @extends HTMLElement
  * @mixes ElementMixin
  * @mixes ThemableMixin
