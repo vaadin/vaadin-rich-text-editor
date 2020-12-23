@@ -895,12 +895,8 @@ class RichTextEditorElement extends ElementMixin(ThemableMixin(PolymerElement)) 
 
   /** @private */
   __updateHtmlValue() {
-    const className = 'ql-editor';
-    const editor = this.shadowRoot.querySelector(`.${className}`);
+    const editor = this.shadowRoot.querySelector('.ql-editor');
     let content = editor.innerHTML;
-
-    // Remove style-scoped classes that are appended when ShadyDOM is enabled
-    Array.from(editor.classList).forEach((c) => (content = content.replace(new RegExp('\\s*' + c, 'g'), '')));
 
     // Remove Quill classes, e.g. ql-syntax, except for align
     content = content.replace(/\s*ql-(?!align)[\w-]*\s*/g, '');
