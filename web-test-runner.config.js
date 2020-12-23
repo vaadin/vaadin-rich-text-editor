@@ -22,6 +22,27 @@ const config = {
   }
 };
 
+config.testRunnerHtml = (testFramework) => `
+  <!DOCTYPE html>
+  <html>
+    <body>
+      <script>
+        // mimic flow production mode
+        window.Vaadin = {
+          Flow: {
+            clients: {
+              ROOT: {
+                productionMode: true
+              }
+            }
+          }
+        };
+      </script>
+      <script type="module" src="${testFramework}"></script>
+    </body>
+  </html>
+`;
+
 if (process.env.TEST_ENV === 'sauce') {
   const sauceLabsLauncher = createSauceLabsLauncher(
     {
