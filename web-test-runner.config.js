@@ -14,10 +14,10 @@ const config = {
   coverageConfig: {
     include: ['**/src/*'],
     threshold: {
-      statements: 95,
-      branches: 82,
+      statements: 96,
+      branches: 86,
       functions: 93,
-      lines: 95
+      lines: 96
     }
   }
 };
@@ -26,7 +26,7 @@ if (process.env.TEST_ENV === 'sauce') {
   const sauceLabsLauncher = createSauceLabsLauncher(
     {
       user: process.env.SAUCE_USERNAME,
-      key: process.env.SAUCE_ACCESS_KEY,
+      key: process.env.SAUCE_ACCESS_KEY
     },
     {
       name: 'vaadin-rich-text-editor unit tests',
