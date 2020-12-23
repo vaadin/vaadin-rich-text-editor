@@ -2,7 +2,7 @@ import { ThemableMixin } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mix
 
 import { ElementMixin } from '@vaadin/vaadin-element-mixin/vaadin-element-mixin.js';
 
-import { RichTextEditorI18n } from './interfaces';
+import { RichTextEditorEventMap, RichTextEditorI18n } from './interfaces';
 
 /**
  * `<vaadin-rich-text-editor>` is a Web Component for rich text editing.
@@ -116,6 +116,18 @@ declare class RichTextEditorElement extends ElementMixin(ThemableMixin(HTMLEleme
    * This method is aptly named to ensure the developer has taken the necessary precautions.
    */
   dangerouslySetHtmlValue(htmlValue: string): void;
+
+  addEventListener<K extends keyof RichTextEditorEventMap>(
+    type: K,
+    listener: (this: RichTextEditorElement, ev: RichTextEditorEventMap[K]) => void,
+    options?: boolean | AddEventListenerOptions
+  ): void;
+
+  removeEventListener<K extends keyof RichTextEditorEventMap>(
+    type: K,
+    listener: (this: RichTextEditorElement, ev: RichTextEditorEventMap[K]) => void,
+    options?: boolean | EventListenerOptions
+  ): void;
 }
 
 declare global {

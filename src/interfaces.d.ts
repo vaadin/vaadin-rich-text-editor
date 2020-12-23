@@ -25,3 +25,21 @@ export interface RichTextEditorI18n {
   cancel: string;
   remove: string;
 }
+
+/**
+ * Fired when the `htmlValue` property changes.
+ */
+export type RichTextEditorHtmlValueChanged = CustomEvent<{ value: string }>;
+
+/**
+ * Fired when the `value` property changes.
+ */
+export type RichTextEditorValueChanged = CustomEvent<{ value: string }>;
+
+export interface RichTextEditorElementEventMap {
+  'html-value-changed': RichTextEditorHtmlValueChanged;
+
+  'value-changed': RichTextEditorValueChanged;
+}
+
+export interface RichTextEditorEventMap extends HTMLElementEventMap, RichTextEditorElementEventMap {}
