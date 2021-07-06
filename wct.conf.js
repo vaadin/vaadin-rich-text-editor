@@ -24,12 +24,12 @@ module.exports = {
       dir: './coverage',
       reporters: ['text-summary', 'lcov'],
       include: [
-        '**/vaadin-app-layout/src/*.html'
+        '**/vaadin-rich-text-editor/src/*.html'
       ],
       exclude: [],
       thresholds: {
         global: {
-          statements: 80
+          statements: env === 'saucelabs' ? 86 : 99
         }
       }
     }
