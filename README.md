@@ -10,10 +10,7 @@
 [API documentation ↗](https://cdn.vaadin.com/vaadin-rich-text-editor/1.0.0-alpha6)
 
 [![npm version](https://badgen.net/npm/v/@vaadin/vaadin-rich-text-editor)](https://www.npmjs.com/package/@vaadin/vaadin-rich-text-editor)
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/vaadin/vaadin-rich-text-editor)
-[![Build Status](https://travis-ci.org/vaadin/vaadin-rich-text-editor.svg?branch=master)](https://travis-ci.org/vaadin/vaadin-rich-text-editor)
 [![Published on Vaadin Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/vaadinvaadin-rich-text-editor)
-[![Stars on vaadin.com/directory](https://img.shields.io/vaadin-directory/star/vaadin-rich-text-editor-directory-urlidentifier.svg)](https://vaadin.com/directory/component/vaadinvaadin-rich-text-editor)
 [![Discord](https://img.shields.io/discord/732335336448852018?label=discord)](https://discord.gg/PHmkCKC)
 
 <!--
@@ -28,9 +25,7 @@
 ```
 -->
 ```html
-<vaadin-rich-text-editor>
-  ...
-</vaadin-rich-text-editor>
+<vaadin-rich-text-editor></vaadin-rich-text-editor>
 ```
 
 [<img src="https://raw.githubusercontent.com/vaadin/vaadin-rich-text-editor/master/screenshot.png" width="200" alt="Screenshot of vaadin-rich-text-editor">](https://vaadin.com/components/vaadin-rich-text-editor)
