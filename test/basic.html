@@ -65,8 +65,11 @@
           beforeEach(done => {
             editor.focus();
             editor.insertText(0, 'Foo', 'user');
-            editor.setSelection(0, 3);
-            Polymer.RenderStatus.afterNextRender(rte, done);
+            // handle race condition between inserting text updating the selection, and programmatically changing the selection
+            setTimeout(() => {
+              editor.setSelection(0, 3);
+              Polymer.RenderStatus.afterNextRender(rte, done);
+            });
           });
 
           ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'].forEach(fmt => {
