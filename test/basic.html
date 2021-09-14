@@ -24,6 +24,12 @@
   </test-fixture>
 
   <script>
+    const isDesktopSafari = (() => {
+      const uA = navigator.userAgent;
+      const vendor = navigator.vendor;
+      return /Safari/i.test(uA) && /Apple Computer/.test(vendor) && !/Mobi|Android/i.test(uA);
+    })();
+
     describe('rich text editor', () => {
       'use strict';
 
@@ -64,7 +70,9 @@
           });
 
           ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'].forEach(fmt => {
-            it(`should apply ${fmt} formatting to the selected text on click`, () => {
+            // Applying formatting to selected text is currently broken in Safari:
+            // https://github.com/vaadin/web-components/issues/2115
+            !isDesktopSafari && it(`should apply ${fmt} formatting to the selected text on click`, () => {
               btn = getButton(fmt);
               btn.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
               editor.root.dispatchEvent(new CustomEvent('focusout', {bubbles: true}));
@@ -248,12 +256,6 @@
             btn.dispatchEvent(new CustomEvent('touchend', {cancelable: true}));
             expect(spy).to.be.calledOnce;
           });
-
-          const isDesktopSafari = (() => {
-            const uA = navigator.userAgent;
-            const vendor = navigator.vendor;
-            return /Safari/i.test(uA) && /Apple Computer/.test(vendor) && !/Mobi|Android/i.test(uA);
-          })();
 
           !isDesktopSafari && it('should insert image from the file dialog on file input change event', done => {
             // We can't simply assign `files` property of input[type="file"].
