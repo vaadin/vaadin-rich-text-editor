@@ -11,19 +11,7 @@
 
 <body>
   <script>
-    const isChrome = window.chrome || /HeadlessChrome/.test(window.navigator.userAgent);
-
-    WCT.loadSuites(
-      window.RichTextEditorSuites
-        .reduce(function(suites, suite) {
-          // skip tests with explicit ShadyDOM enabled on Chrome
-          if (isChrome) {
-            return suites.concat(suite);
-          }
-
-          return suites.concat([suite, `${suite}?wc-shadydom=true`]);
-        }, [])
-    );
+    WCT.loadSuites(window.RichTextEditorSuites);
   </script>
 </body>
 
