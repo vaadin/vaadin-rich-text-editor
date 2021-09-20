@@ -73,9 +73,7 @@
           });
 
           ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'].forEach(fmt => {
-            // Applying formatting to selected text is currently broken in Safari:
-            // https://github.com/vaadin/web-components/issues/2115
-            !isDesktopSafari && it(`should apply ${fmt} formatting to the selected text on click`, () => {
+            it(`should apply ${fmt} formatting to the selected text on click`, () => {
               btn = getButton(fmt);
               btn.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
               editor.root.dispatchEvent(new CustomEvent('focusout', {bubbles: true}));

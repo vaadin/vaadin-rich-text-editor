@@ -11,12 +11,7 @@
 
 <body>
   <script>
-    WCT.loadSuites(
-      window.RichTextEditorSuites
-        .reduce(function(suites, suite) {
-          return suites.concat([suite, `${suite}?wc-shadydom=true`]);
-        }, [])
-    );
+    WCT.loadSuites(window.RichTextEditorSuites);
   </script>
 </body>
 
