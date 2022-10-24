@@ -13,6 +13,7 @@
   ],
   "author": "Vaadin Ltd",
   "license": "https://raw.githubusercontent.com/vaadin/vaadin-rich-text-editor/master/LICENSE",
+  "cvdlName": "vaadin-rich-text-editor",
   "bugs": {
     "url": "https://github.com/vaadin/vaadin-rich-text-editor/issues"
   },
