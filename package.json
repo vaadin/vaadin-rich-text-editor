@@ -47,9 +47,9 @@
     "preversion": "magi update-version"
   },
   "devDependencies": {
-    "@vaadin/vaadin-component-dev-dependencies": "^3.2.0",
-    "gulp": "^4.0.0",
-    "gulp-cli": "^2.0.1",
+    "@vaadin/vaadin-component-dev-dependencies": "^4.9.2",
+    "gulp": "^5.0.0",
+    "gulp-cli": "^3.0.0",
     "gulp-iconfont": "^10.0.1"
   }
 }
