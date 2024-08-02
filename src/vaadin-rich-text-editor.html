@@ -555,6 +555,18 @@ This program is available under Apache License Version 2.0, available at https:/
           this._editor.on('selection-change', this.__announceFormatting.bind(this));
         }
 
+        connectedCallback() {
+          super.connectedCallback();
+
+          this._editor.emitter.connect();
+        }
+
+        disconnectedCallback() {
+          super.connectedCallback();
+
+          this._editor.emitter.disconnect();
+        }
+
         /** @private */
         _prepareToolbar() {
           const clean = Quill.imports['modules/toolbar'].DEFAULTS.handlers.clean;
