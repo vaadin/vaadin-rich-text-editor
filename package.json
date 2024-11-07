@@ -54,7 +54,7 @@
   },
   "overrides": {
     "wct-sauce":{
-      "sauce-connect-launcher": "sissbruecker/sauce-connect-launcher#upgrade-v5"
+      "sauce-connect-launcher": "vaadin/sauce-connect-launcher#upgrade-sauce-connect-5"
     }
   }
 }
