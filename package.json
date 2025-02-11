@@ -51,5 +51,10 @@
     "gulp": "^4.0.0",
     "gulp-cli": "^2.0.1",
     "gulp-iconfont": "^10.0.1"
+  },
+  "overrides": {
+    "wct-sauce": {
+      "sauce-connect-launcher": "vaadin/sauce-connect-launcher#upgrade-sauce-connect-5"
+    }
   }
 }
